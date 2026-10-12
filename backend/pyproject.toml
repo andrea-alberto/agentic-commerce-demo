@@ -1,0 +1,33 @@
+[project]
+name = "travel_retail_agent"
+version = "0.1.0"
+description = "UCP Travel Retail Agent for Milano Centrale - GDG DevFest 2026"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic[email]>=2.12.3",
+    "google-adk[a2a]==1.27.4",
+    "a2a-sdk[http-server]==0.3.22",
+    "starlette>=0.45.0",
+    "sse-starlette>=2.0.0",
+    "uvicorn>=0.35.0",
+    "httpx>=0.28.1",
+    "ucp-sdk==0.1.0",
+    "google-cloud-firestore>=2.34.0",
+]
+
+[project.scripts]
+travel_retail_agent = "travel_retail_agent.main:run"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.1"
+]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

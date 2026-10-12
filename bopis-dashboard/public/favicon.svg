@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg-bopis-kds" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27272a"/>
+      <stop offset="100%" stop-color="#18181b"/>
+    </linearGradient>
+    <linearGradient id="amber-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg-bopis-kds)"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#amber-orange)" stroke-width="3"/>
+  <path d="M16 26 L32 17 L48 26 L32 35 Z" fill="#fdba74" stroke="#ea580c" stroke-width="1.5"/>
+  <path d="M16 26 L32 35 L32 49 L16 40 Z" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+  <path d="M32 35 L48 26 L48 40 L32 49 Z" fill="#c2410c" stroke="#ea580c" stroke-width="1.5"/>
+  <path d="M24 21.5 L40 30.5" stroke="#ea580c" stroke-width="2.5"/>
+  <circle cx="48" cy="48" r="11" fill="#ea580c"/>
+  <circle cx="48" cy="48" r="11" fill="none" stroke="#fed7aa" stroke-width="1.5"/>
+  <path d="M49 41 L43 49 L47.5 49 L46.5 55 L53 47 L48.5 47 Z" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg-bistrot-chat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#292524"/>
+      <stop offset="100%" stop-color="#1c1917"/>
+    </linearGradient>
+    <linearGradient id="amber-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg-bistrot-chat)"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#amber-glow)" stroke-width="3"/>
+  <path d="M24 13 Q21 17 24 21" stroke="#fde68a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M32 10 Q29 15 32 20" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M40 13 Q37 17 40 21" stroke="#fde68a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M18 24 L46 24 C46 36 41 42 32 42 C23 42 18 36 18 24 Z" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <path d="M44 26 C51 26 51 37 43 38" fill="none" stroke="#fef3c7" stroke-width="3.5" stroke-linecap="round"/>
+  <ellipse cx="32" cy="46" rx="19" ry="3.5" fill="#fbbf24"/>
+  <circle cx="48" cy="48" r="11" fill="#d97706"/>
+  <circle cx="48" cy="48" r="11" fill="none" stroke="#fde68a" stroke-width="1.5"/>
+  <path d="M43 44 C43 41.8 45.2 40 48 40 C50.8 40 53 41.8 53 44 C53 46.2 50.8 48 48 48 C47.2 48 46.5 47.8 45.8 47.4 L43.5 48.5 L44.2 46.3 C43.5 45.6 43 44.8 43 44 Z" fill="#ffffff"/>
+</svg>

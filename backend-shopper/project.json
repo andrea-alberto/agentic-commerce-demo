@@ -1,0 +1,12 @@
+{
+  "name": "backend-shopper",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "command": "..\\backend\\.venv\\Scripts\\python.exe main.py --port 10998",
+      "options": {
+        "cwd": "backend-shopper"
+      }
+    }
+  }
+}

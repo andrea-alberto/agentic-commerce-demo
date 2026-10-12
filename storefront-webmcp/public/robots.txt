@@ -1,0 +1,26 @@
+# Milano Centrale Travel Storefront Robots.txt
+# Configured for AI Agents and Search Engines
+
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /.well-known/webmcp
+
+# Dedicated AI Bots Permissions
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: WebMCP-Inspector
+Allow: /

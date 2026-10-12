@@ -1,0 +1,38 @@
+[
+  {
+    "email": "alex.traveler@example.com",
+    "display_name": "Alex Rossi",
+    "allowed_apps": [
+      "shopper-client"
+    ],
+    "active": true,
+    "created_at": "2026-10-07T21:00:00Z",
+    "loyalty_tier": "FrecciaClub Gold",
+    "loyalty_code": "FF-AR2026",
+    "ticket": {
+      "train_number": "Frecciarossa 9540",
+      "pnr": "FR-9540-AR",
+      "origin": "Milano Centrale",
+      "destination": "Roma Termini",
+      "departure_time": "13:10",
+      "platform": "14",
+      "carriage": "4",
+      "seat": "12D",
+      "class_service": "Area Silenzio • Prima Classe"
+    },
+    "preferences": {
+      "preferred_fulfillment": "in_seat_train",
+      "dietary": "Selezione Viaggio Gourmet • Piatti leggeri e bio",
+      "max_budget_cents": 3500,
+      "notes": "Pasto da consegnare al posto sul Frecciarossa prima della partenza"
+    },
+    "ap2": {
+      "enabled": true,
+      "mandate_type": "ap2_cart_mandate",
+      "max_amount_cents": 3500,
+      "currency": "EUR",
+      "credential_manager": "LocalCredentialManager",
+      "token_id": "tok_lcm_passkey_fr9540_ar"
+    }
+  }
+]

@@ -1,0 +1,1061 @@
+<div class="mcp-app-wrapper">
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="mcp-top-bar">
+    <div class="brand-group">
+      <div class="logo-box">🛍️</div>
+      <div class="brand-text">
+        <h1 class="brand-title">Bistrot Milano Centrale (Binario 12)</h1>
+        <span class="brand-sub">Web Storefront · WebMCP (Demo 2) · Stazione Milano Centrale</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- USER ACCOUNT PILL (GOOGLE + FIREBASE AUTH) -->
+      @if (currentUser(); as user) {
+        <div class="user-pill logged-in">
+          @if (user.photoURL) {
+            <img [src]="user.photoURL" class="user-avatar-img" alt="Avatar" />
+          } @else {
+            <span class="user-avatar-icon">👤</span>
+          }
+          <div class="user-meta-box">
+            <span class="user-name-text">{{ user.name }}</span>
+            <span class="user-tier-badge">⭐ {{ user.loyaltyTier }}</span>
+          </div>
+          <button class="btn-toggle-user" (click)="logout()" title="Disconnetti account Google">Esci</button>
+        </div>
+      } @else {
+        <button class="btn-login-google" (click)="loginWithGoogle()">
+          <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Accedi con Google</span>
+        </button>
+      }
+
+      <!-- CART BUTTON -->
+      <button class="cart-btn" (click)="openCart()" [class.has-items]="mcpService.cartItemsCount() > 0">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-label">Carrello</span>
+        <span class="cart-count-badge">{{ mcpService.cartItemsCount() }}</span>
+        <span class="cart-total-badge">€ {{ ((mcpService.currentCart()?.total_cents || 0) / 100).toFixed(2) }}</span>
+      </button>
+
+      <div class="status-badge" [class.connected]="mcpService.isMcpConnected()">
+        <span class="status-dot"></span>
+        <span class="status-text">WebMCP Ready (6 Tools)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- STOREFRONT NAVIGATION BAR -->
+  <nav class="storefront-nav-bar">
+    <div class="nav-container">
+      <div class="nav-links">
+        <button class="nav-link-btn" [class.active]="activeView() === 'catalog'" (click)="setActiveView('catalog')">
+          <span class="nav-icon">🏬</span>
+          <span>Catalogo</span>
+        </button>
+        <button class="nav-link-btn" [class.active]="activeView() === 'orders'" (click)="setActiveView('orders')">
+          <span class="nav-icon">📦</span>
+          <span>I Miei Ordini</span>
+          @if (userOrders().length > 0) {
+            <span class="nav-orders-count">{{ userOrders().length }}</span>
+          }
+        </button>
+        <button class="nav-link-btn" [class.active]="activeView() === 'about'" (click)="setActiveView('about')">
+          <span class="nav-icon">ℹ️</span>
+          <span>About & WebMCP</span>
+        </button>
+      </div>
+      @if (currentUser(); as u) {
+        <div class="nav-traveler-info">
+          <span>Viaggiatore: <strong>{{ u.name }}</strong> · ⭐ {{ u.loyaltyTier }}</span>
+        </div>
+      } @else {
+        <div class="nav-traveler-info not-logged">
+          <span>Demo 2 · Model Context Protocol (WebMCP)</span>
+        </div>
+      }
+    </div>
+  </nav>
+
+  <!-- DEMO 2 SPEAKER PROMPT HELPER BANNER (3 SUB-STEPS) -->
+  <div class="demo2-prompt-banner">
+    <div class="demo2-banner-header">
+      <div class="banner-title-area">
+        <span class="prompt-badge">🎤 Demo 2 (WebMCP) · 4 Sotto-Step (1 Metodo WebMCP per Step)</span>
+        <span class="banner-hint">Filtro Catalogo ➔ Aggiungi Carrello ➔ Smart Locker ➔ Apri Checkout</span>
+      </div>
+      <div class="banner-actions-right">
+        <button type="button" class="btn-copy-context" (click)="copyPageContext()" [class.copied]="isContextCopied()" title="Copia lo stato attuale dei prodotti a video in formato Markdown per l'in-browser AI">
+          <span>{{ isContextCopied() ? '✓ Contesto Copiato!' : '📋 Copia Contesto UI (Markdown)' }}</span>
+        </button>
+        <button type="button" class="btn-copy-full" (click)="copyDemoPrompt()" [class.copied]="isDemoPromptCopied()" title="Copia l'intero prompt composito unico">
+          <span>{{ isDemoPromptCopied() ? '✓ Copiato!' : '📋 Copia Richiesta Unica' }}</span>
+        </button>
+      </div>
+    </div>
+    <div class="demo2-steps-grid">
+      @for (st of demo2Steps; track st.step; let idx = $index) {
+        <div class="demo2-step-card" [class.copied]="copiedStepIndex() === idx">
+          <div class="step-card-top">
+            <span class="step-pill">{{ st.badge }}</span>
+            <button type="button" class="btn-copy-step" (click)="copyStepPrompt(idx)" title="Copia prompt per questo step">
+              {{ copiedStepIndex() === idx ? '✓ Copiato!' : '📋 Copia Step' }}
+            </button>
+          </div>
+          <div class="step-prompt-text">"{{ st.prompt }}"</div>
+          <div class="step-action-hint">{{ st.action }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ORDER CONFIRMATION BANNER -->
+  @if (orderSuccessBanner(); as order) {
+    <div class="global-order-banner">
+      <div class="banner-content">
+        <div class="banner-icon">🎉</div>
+        <div class="banner-body">
+          <div class="banner-title-row">
+            <h4>Ordine Confermato con Successo!</h4>
+            <span class="order-id-badge">{{ order.order_id }}</span>
+          </div>
+          <p class="banner-sub">
+            Registrato alle <strong>{{ order.placed_at }}</strong> · Ritiro/Consegna: <strong>{{ order.requested_delivery }}</strong> · Totale: <strong>{{ order.total_formatted || ('€' + (order.total_cents / 100).toFixed(2)) }}</strong>
+          </p>
+          <div class="banner-fulfillment-pill">
+            <span>🚚 Metodo: {{ order.fulfillment?.label }}</span>
+            @if (order.payment_method === 'gpay') {
+              <span class="pay-banner-pill gpay">🟢 Google Pay</span>
+            } @else if (order.payment_method === 'card') {
+              <span class="pay-banner-pill card">💳 Carta di Credito</span>
+            } @else if (order.payment_method === 'ap2' || order.ap2_mandate_id) {
+              <span class="pay-banner-pill ap2">🛡️ Mandato AP2</span>
+            }
+            @if (order.fulfillment?.pin_code) {
+              <span class="pin-pill">🔑 PIN Locker: {{ order.fulfillment.pin_code }} ({{ order.fulfillment.box_number }})</span>
+            }
+            @if (order.fulfillment?.train_number) {
+              <span class="train-pill">🚆 {{ order.fulfillment.train_number }} • Carrozza {{ order.fulfillment.carriage }} Posto {{ order.fulfillment.seat }}</span>
+            }
+          </div>
+        </div>
+        <div class="banner-actions">
+          <button class="btn-view-history" (click)="viewOrderInHistory(order)">📦 Vedi nei Miei Ordini</button>
+          <button class="btn-close-banner" (click)="dismissSuccessBanner()">✕ Chiudi</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- MAIN E-COMMERCE CATALOG & ORDERS LAYOUT -->
+  <main class="store-grid">
+    @if (activeView() === 'catalog') {
+      <section class="storefront-column">
+      <div class="section-header">
+        <div class="sec-title-group">
+          <h2>🏬 Catalogo Milano Centrale</h2>
+          <span class="sec-desc">Sfoglia le specialità della stazione, consulta la scheda tecnica o ordina tramite l'Agente AI WebMCP</span>
+        </div>
+
+        <!-- REAL E-COMMERCE FREE-TEXT SEARCH BAR (SYNCHRONIZED WITH WEBMCP AGENT SEARCH) -->
+        <div class="catalog-search-bar-row">
+          <div class="catalog-search-bar">
+            <span class="search-bar-icon">🔍</span>
+            <input 
+              type="text" 
+              class="catalog-search-input" 
+              placeholder="Cerca nel catalogo (es. panino, spremuta, toast, caffè, vegano)..." 
+              [value]="mcpService.searchQuery()" 
+              (input)="onSearchInput($event)"
+            />
+            @if (mcpService.searchQuery()) {
+              <button type="button" class="btn-clear-search-input" (click)="resetSearch()" title="Cancella ricerca">✕</button>
+            }
+          </div>
+        </div>
+      </div>
+
+        <!-- CATEGORY CHIPS (FACETED METADATA FILTERS) -->
+        <div class="cat-chips">
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'all' && !mcpService.searchQuery()" (click)="selectCategory('all')">
+            Tutti ({{ mcpService.products().length }})
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'sandwiches'" (click)="selectCategory('sandwiches')">
+            🥪 Panini & Toast
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'vegan'" (click)="selectCategory('vegan')">
+            🌱 Vegano
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'coffee'" (click)="selectCategory('coffee')">
+            ☕ Caffetteria
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'drinks'" (click)="selectCategory('drinks')">
+            🥤 Bevande Fresche
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'specialty'" (click)="selectCategory('specialty')">
+            ⭐ Specialty Coffee
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'gluten_free'" (click)="selectCategory('gluten_free')">
+            🌾 Senza Glutine (AIC)
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'lactose_free'" (click)="selectCategory('lactose_free')">
+            🥛 Senza Lattosio
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'high_protein'" (click)="selectCategory('high_protein')">
+            💪 High-Protein
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'cold'" (click)="selectCategory('cold')">
+            ❄️ Freddi & Locker
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'hot'" (click)="selectCategory('hot')">
+            🔥 Caldi
+          </button>
+          <button class="cat-chip" [class.active]="mcpService.selectedCategory() === 'tech'" (click)="selectCategory('tech')">
+            ⚡ Accessori Tech
+          </button>
+        </div>
+
+        <!-- SEARCH STATUS BADGE (ACTIVATED BY WEBMCP AGENT SEARCH) -->
+        @if (mcpService.searchQuery()) {
+          <div class="search-feedback-bar">
+            <span class="search-feedback-text">
+              🔍 Ricerca Attiva: <strong>"{{ mcpService.searchQuery() }}"</strong> · <em>{{ mcpService.filteredProducts().length }} prodotti trovati</em>
+            </span>
+            <button class="btn-clear-filter" (click)="resetSearch()">✕ Ripristina Tutto</button>
+          </div>
+        }
+
+      <!-- PRODUCTS GRID -->
+      <div class="products-grid">
+        @if (mcpService.filteredProducts().length === 0) {
+          <div class="empty-search-card">
+            <span class="empty-search-icon">🔍</span>
+            <h4>Nessun prodotto trovato per "{{ mcpService.searchQuery() || mcpService.selectedCategory() }}"</h4>
+            <p>L'agente WebMCP ha eseguito la ricerca ma nessun articolo nel catalogo corrisponde ai parametri indicati.</p>
+            <button class="btn-reset-catalog" (click)="resetSearch()">Mostra Tutto il Catalogo</button>
+          </div>
+        } @else {
+          @for (prod of mcpService.filteredProducts(); track prod.id) {
+            <div class="product-card" [class.expanded-card]="isSpecsExpanded(prod.id)">
+              <div class="product-img-wrapper">
+                <img [src]="prod.image_url" [alt]="prod.name" class="product-img" />
+                <div class="temp-badge" [class.hot]="prod.is_hot" [class.cold]="!prod.is_hot">
+                  {{ prod.is_hot ? '🔥 Caldo' : '❄️ Freddo / Locker' }}
+                </div>
+                <!-- NUTRI-SCORE & NOVA QUICK BADGES -->
+                <div class="card-nutrition-pills">
+                  @if (prod.nutrition?.nutri_score; as score) {
+                    <span class="score-pill" [style.background-color]="getNutriScoreColor(score)" title="Nutri-Score">
+                      Nutri-Score <strong>{{ score }}</strong>
+                    </span>
+                  }
+                  @if (prod.processing_level?.nova_group; as nova) {
+                    <span class="nova-pill" [style.background-color]="getNovaColor(nova)" title="Classificazione NOVA ultraprocessazione">
+                      NOVA <strong>{{ nova }}</strong>
+                    </span>
+                  }
+                  @if (prod.packaging_type === 'prepackaged') {
+                    <span class="pack-pill prepackaged" title="Prodotto alimentare preconfezionato con tabella nutrizionale obbligatoria">
+                      📦 Confezionato /100g
+                    </span>
+                  } @else if (prod.packaging_type === 'fresh_service') {
+                    <span class="pack-pill fresh" title="Preparazione fresca al banco bistrot">
+                      🍽️ Servizio Fresco
+                    </span>
+                  }
+                </div>
+              </div>
+
+              <div class="product-body">
+                <div class="product-id-row">
+                  <span class="prod-sku">{{ prod.id }}</span>
+                  @if (prod.coffee_profile?.is_specialty_grade) {
+                    <span class="specialty-badge">☕ Specialty Coffee</span>
+                  }
+                  @if (prod.dietary_profile?.aic_gluten_free_certified) {
+                    <span class="aic-badge">🌾 AIC Gluten-Free</span>
+                  }
+                </div>
+                <h3 class="prod-title">{{ prod.name }}</h3>
+                <p class="prod-desc">{{ prod.description }}</p>
+
+                <!-- MACRO SUMMARY CHIPS -->
+                <div class="macro-chips-row">
+                  @if (prod.nutrition?.per_100g?.salt_g !== undefined || prod.nutrition?.per_serving?.salt_g !== undefined) {
+                    <span class="macro-tag salt">
+                      🧂 Sale: <strong>{{ prod.nutrition?.per_100g?.salt_g ?? prod.nutrition?.per_serving?.salt_g }}g</strong>
+                    </span>
+                  }
+                  @if (prod.nutrition?.per_100g?.protein_g !== undefined || prod.nutrition?.per_serving?.protein_g !== undefined) {
+                    <span class="macro-tag protein">
+                      💪 Proteine: <strong>{{ prod.nutrition?.per_100g?.protein_g ?? prod.nutrition?.per_serving?.protein_g }}g</strong>
+                    </span>
+                  }
+                  @if (prod.net_weight_g) {
+                    <span class="macro-tag weight">
+                      ⚖️ {{ prod.net_weight_g }}g
+                    </span>
+                  }
+                </div>
+
+                <div class="product-footer">
+                  <div class="prod-price">€ {{ prod.price.toFixed(2) }}</div>
+                  <button class="btn-toggle-specs" (click)="toggleProductSpecs(prod.id)">
+                    <span>{{ isSpecsExpanded(prod.id) ? '▲ Nascondi Scheda' : '▼ 🔍 Scheda Tecnica' }}</span>
+                  </button>
+                </div>
+
+                <!-- EXPANDABLE TECHNICAL & NUTRITIONAL ACCORDION -->
+                @if (isSpecsExpanded(prod.id)) {
+                  <div class="product-specs-panel">
+                    <!-- 1. NUTRITION TABLE (Reg. UE 1169/2011) -->
+                    @if (prod.nutrition; as nutr) {
+                      <div class="specs-section">
+                        <div class="specs-sec-title">
+                          📊 Dichiarazione Nutrizionale ({{ nutr.reference_quantity === 'per_100g' ? 'Valori medi per 100g' : 'Valori per porzione' }})
+                        </div>
+                        @if (nutr.per_100g || nutr.per_serving; as vals) {
+                          <table class="specs-nutri-table">
+                            <tbody>
+                              <tr>
+                                <td>Energia</td>
+                                <td><strong>{{ vals.energy_kcal }} kcal</strong></td>
+                              </tr>
+                              <tr>
+                                <td>Grassi (di cui saturi)</td>
+                                <td>{{ vals.fat_g }}g ({{ vals.saturates_g }}g)</td>
+                              </tr>
+                              <tr>
+                                <td>Carboidrati (di cui zuccheri)</td>
+                                <td>{{ vals.carbohydrates_g }}g ({{ vals.sugars_g }}g)</td>
+                              </tr>
+                              <tr>
+                                <td>Proteine</td>
+                                <td><strong>{{ vals.protein_g }}g</strong></td>
+                              </tr>
+                              <tr class="highlight-salt">
+                                <td>🧂 <strong>Sale</strong></td>
+                                <td><strong>{{ vals.salt_g }}g</strong></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        }
+                      </div>
+                    }
+
+                    <!-- 2. PROCESSING & NOVA -->
+                    @if (prod.processing_level; as nova) {
+                      <div class="specs-section">
+                        <div class="specs-sec-title">🏭 Grado di Trasformazione (NOVA)</div>
+                        <p class="specs-text">
+                          <strong>Gruppo {{ nova.nova_group }}</strong> ({{ nova.nova_name }}): {{ nova.description }}
+                        </p>
+                      </div>
+                    }
+
+                    <!-- 3. ALLERGENS & DIETARY -->
+                    @if (prod.dietary_profile; as diet) {
+                      <div class="specs-section">
+                        <div class="specs-sec-title">🏷️ Profilo Dietetico & Allergeni</div>
+                        <div class="dietary-tags-list">
+                          @for (tag of diet.dietary_tags; track tag) {
+                            <span class="dt-tag">{{ tag }}</span>
+                          }
+                          @for (claim of diet.allergens_free_claim; track claim) {
+                            <span class="dt-claim">✓ {{ claim }}</span>
+                          }
+                        </div>
+                        @if (diet.allergens && diet.allergens.length > 0) {
+                          <div class="allergens-alert">
+                            ⚠️ <strong>Contiene allergeni:</strong> {{ diet.allergens.join(', ') }}
+                          </div>
+                        }
+                      </div>
+                    }
+
+                    <!-- 4. SPECIALTY COFFEE PROFILE -->
+                    @if (prod.coffee_profile; as coffee) {
+                      <div class="specs-section coffee-specs">
+                        <div class="specs-sec-title">☕ Profilo Specialty Coffee & Brewing</div>
+                        <ul class="coffee-details-list">
+                          <li><strong>Origine & Terroir:</strong> {{ coffee.origin_country }} ({{ coffee.region_estate }})</li>
+                          <li><strong>Altitudine:</strong> {{ coffee.altitude_masl }} m.s.l.m. · Specie: {{ coffee.species }}</li>
+                          <li><strong>Processo & Tostatura:</strong> {{ coffee.process_method }} · {{ coffee.roast_profile }}</li>
+                          <li><strong>Metodo di Preparazione:</strong> {{ coffee.brew_method }} @if(coffee.extraction_time_hours) { (Estrazione {{ coffee.extraction_time_hours }} ore) }</li>
+                          <li><strong>Note Sensoriali:</strong> {{ coffee.flavor_notes?.join(' · ') }}</li>
+                        </ul>
+                      </div>
+                    }
+
+                    <!-- 5. TECH SPECS -->
+                    @if (prod.tech_specs; as tech) {
+                      <div class="specs-section tech-specs">
+                        <div class="specs-sec-title">⚡ Specifiche Tecniche GaN Fast-Charge</div>
+                        <ul class="tech-details-list">
+                          <li><strong>Potenza:</strong> {{ tech.wattage_w }}W GaN Fast Charger</li>
+                          <li><strong>Porte:</strong> {{ tech.ports?.join(', ') }}</li>
+                          <li><strong>Protocolli:</strong> {{ tech.fast_charge_protocols?.join(', ') }}</li>
+                        </ul>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- ADD TO CART BUTTON WITH DECLARATIVE WEBMCP ATTRIBUTES -->
+                <div class="product-action-row">
+                  <button
+                    class="btn-add-cart"
+                    (click)="addProductToCart(prod)"
+                    toolname="addToCart"
+                    [attr.tooldescription]="'Aggiungi articolo ' + prod.name + ' al carrello'"
+                    toolaction="/mcp/cart/add"
+                  >
+                    <span>➕ Aggiungi al Carrello</span>
+                    @if (getProductCartQty(prod.id); as qty) {
+                      @if (qty > 0) {
+                        <span class="in-cart-badge">({{ qty }} nel carrello)</span>
+                      }
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+    } @else if (activeView() === 'orders') {
+      <section class="orders-column">
+        <div class="section-header">
+          <div class="sec-title-group">
+            <h2>📦 I Miei Ordini & Consegne BOPIS</h2>
+            <span class="sec-desc">Storico e tracking in tempo reale per la stazione di Milano Centrale</span>
+          </div>
+          <button class="btn-refresh-orders" (click)="refreshOrders()" [disabled]="isOrdersLoading()">
+            <span class="refresh-icon" [class.spinning]="isOrdersLoading()">🔄</span>
+            <span>Aggiorna Ordini</span>
+          </button>
+        </div>
+
+        @if (!currentUser()) {
+          <div class="empty-orders-card">
+            <span class="empty-orders-icon">👤</span>
+            <h4>Accedi per Visualizzare i Tuoi Ordini</h4>
+            <p>Effettua l'accesso con il tuo account Google per visualizzare lo storico delle tue ordinazioni e il tracking delle consegne in stazione.</p>
+            <button class="btn-login-google" style="margin: 1.25rem auto 0 auto;" (click)="loginWithGoogle()">
+              <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Accedi con Google</span>
+            </button>
+          </div>
+        } @else if (isOrdersLoading()) {
+          <div class="orders-loading-state">
+            <span class="spinner-large"></span>
+            <p>Caricamento ordini in corso...</p>
+          </div>
+        } @else if (userOrders().length === 0) {
+          <div class="empty-orders-card">
+            <span class="empty-orders-icon">📦</span>
+            <h4>Nessun ordine trovato per {{ currentUser()?.name }}</h4>
+            <p>Non hai ancora effettuato ordini BOPIS con questo account. Sfoglia il catalogo o chiedi all'agente AI di aggiungere un panino al carrello!</p>
+            <button class="btn-goto-catalog" (click)="setActiveView('catalog')">Torna al Catalogo</button>
+          </div>
+        } @else {
+          <div class="orders-list">
+            @for (order of userOrders(); track order.order_id) {
+              <div class="order-card" [class.highlighted]="orderSuccessBanner()?.order_id === order.order_id">
+                <div class="order-card-header">
+                  <div class="order-main-info">
+                    <span class="order-id-title">Ordine #{{ order.order_id }}</span>
+                    <span class="order-time-stamp">📅 {{ order.placed_at_display || order.placed_at || order.created_at || 'Recente' }}</span>
+                  </div>
+                  <div class="order-badges">
+                    <span class="order-status-badge" [attr.data-status]="order.status">
+                      {{ order.status_label || order.status }}
+                    </span>
+                    @if (order.payment_method === 'gpay' || order.payment_info?.method === 'gpay') {
+                      <span class="pay-badge gpay" title="Pagamento autorizzato con Google Pay">🟢 Google Pay</span>
+                    } @else if (order.payment_method === 'card' || order.payment_info?.method === 'card') {
+                      <span class="pay-badge card" title="Pagamento con Carta di Credito">💳 Carta</span>
+                    } @else if (order.payment_method === 'ap2' || order.ap2_mandate_id || order.ap2_verification) {
+                      <span class="pay-badge ap2" title="Mandato di pagamento AP2 autorizzato">🛡️ Mandato AP2</span>
+                    } @else {
+                      <span class="pay-badge gpay">🟢 Pagamento</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="order-card-body">
+                  <div class="order-fulfillment-details">
+                    <div class="fl-detail-item">
+                      <span class="fl-label">Metodo di Ritiro:</span>
+                      <strong class="fl-val">
+                        @if (order.fulfillment?.method === 'pickup_locker' || order.fulfillment_type === 'pickup_locker') {
+                          🥪 Smart Locker (Piano Interrato)
+                        } @else if (order.fulfillment?.method === 'in_seat_train' || order.fulfillment_type === 'in_seat_train') {
+                          🚆 Consegna al Posto Treno
+                        } @else if (order.fulfillment?.method === 'table_service' || order.fulfillment_type === 'dine_in_table') {
+                          ☕ Servizio al Tavolo Bistrot
+                        } @else {
+                          ⚡ Ritiro Express al Banco
+                        }
+                      </strong>
+                    </div>
+
+                    <div class="fl-detail-item">
+                      <span class="fl-label">Pagamento:</span>
+                      <strong class="fl-val">
+                        @if (order.payment_method === 'gpay' || order.payment_info?.method === 'gpay') {
+                          🟢 Google Pay (Wallet Viaggiatore)
+                        } @else if (order.payment_method === 'card' || order.payment_info?.method === 'card') {
+                          💳 Carta di Credito (Visa •••• 4242)
+                        } @else if (order.payment_method === 'ap2' || order.ap2_mandate_id || order.ap2_verification) {
+                          🛡️ Mandato Autonomo AP2 (Pre-Approvato)
+                        } @else {
+                          🟢 Google Pay (Wallet)
+                        }
+                      </strong>
+                    </div>
+
+                    @if (order.fulfillment?.pin_code || order.fulfillment_details?.pin_code) {
+                      <div class="fl-detail-item pin-highlight-box">
+                        <span class="fl-label">Codice PIN Sblocco Locker:</span>
+                        <span class="pin-code-val">🔑 {{ order.fulfillment?.pin_code || order.fulfillment_details?.pin_code }}</span>
+                        @if (order.fulfillment?.box_number || order.fulfillment_details?.box_number) {
+                          <span class="box-number-val">{{ order.fulfillment?.box_number || order.fulfillment_details?.box_number }}</span>
+                        }
+                      </div>
+                    }
+
+                    @if (order.fulfillment?.train_number || order.fulfillment_details?.train_number) {
+                      <div class="fl-detail-item train-highlight-box">
+                        <span class="fl-label">Coordinate Treno:</span>
+                        <span class="train-details-val">
+                          🚆 {{ order.fulfillment?.train_number || order.fulfillment_details?.train_number }}
+                          • Binario {{ order.fulfillment?.platform || order.fulfillment_details?.platform || '12' }}
+                          • Carrozza {{ order.fulfillment?.carriage || order.fulfillment_details?.carriage }}
+                          • Posto {{ order.fulfillment?.seat || order.fulfillment_details?.seat }}
+                        </span>
+                      </div>
+                    }
+
+                    @if (order.fulfillment?.table_number || order.fulfillment_details?.table_number) {
+                      <div class="fl-detail-item">
+                        <span class="fl-label">Tavolo Bistrot:</span>
+                        <span class="table-details-val">Tavolo {{ order.fulfillment?.table_number || order.fulfillment_details?.table_number }}</span>
+                      </div>
+                    }
+
+                    @if (order.requested_delivery_display || order.requested_delivery || order.fulfillment_details?.service_time || order.fulfillment_details?.slot_start) {
+                      <div class="fl-detail-item">
+                        <span class="fl-label">Orario Previsto:</span>
+                        <span class="time-details-val">⏰ {{ formatDeliveryTime(order) }}</span>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- ORDER ITEMS -->
+                  @if (order.items && order.items.length > 0) {
+                    <div class="order-items-recap">
+                      <div class="order-items-header">Articoli Ordinati:</div>
+                      <div class="order-items-pills">
+                        @for (it of order.items; track it.product_id || it.id) {
+                          <span class="item-pill">
+                            {{ it.quantity }}x {{ it.name || it.title }}
+                            (€ {{ it.price_cents ? (it.price_cents / 100).toFixed(2) : (it.price ? it.price.toFixed(2) : '0.00') }})
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <div class="order-card-footer">
+                  <div class="order-total-recap">
+                    <span>Totale:</span>
+                    <strong class="order-total-amount">
+                      {{ order.total_formatted || (order.total_cents ? '€ ' + (order.total_cents / 100).toFixed(2) : (order.totals?.total_cents ? '€ ' + (order.totals.total_cents / 100).toFixed(2) : '€ 0.00')) }}
+                    </strong>
+                  </div>
+                  <div class="order-source-tag">
+                    <span class="channel-tag">Origine: {{ order.channel_source === 'web_mcp' ? '🌐 WebMCP Storefront' : (order.channel_label || order.channel_source || 'UCP Protocol') }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    } @else if (activeView() === 'about') {
+      <section class="about-column">
+        <!-- ABOUT HERO CARD -->
+        <div class="about-hero-card">
+          <div class="hero-top-row">
+            <span class="about-badge">ℹ️ DEMO 2 · E-COMMERCE & WEBMCP</span>
+            <button class="btn-back-to-catalog" (click)="setActiveView('catalog')">
+              <span>🏬 Torna al Catalogo</span>
+            </button>
+          </div>
+          <h2>Bistrot Milano Centrale & Model Context Protocol (WebMCP)</h2>
+          <p class="hero-sub">
+            Questo sito e-commerce è la vetrina interattiva della <strong>Demo 2</strong>: un'applicazione web nativa che non si limita a servire utenti umani, ma espone un registry <strong>WebMCP standard</strong> che consente agli Agenti AI di navigare il catalogo, gestire il carrello e finalizzare il checkout per conto del viaggiatore.
+          </p>
+        </div>
+
+        <!-- SECTION 1: THE AGENTIC ADVANTAGE (NARRATIVA TRASFERITA QUI) -->
+        <div class="about-section-card">
+          <div class="sec-badge-row">
+            <span class="adv-badge">💡 THE AGENTIC ADVANTAGE</span>
+          </div>
+          <h3 class="about-card-title">Attrito di Consultazione Umana vs Risoluzione AI Istantanea</h3>
+          <p class="about-card-lead">
+            Questo catalogo espone <strong>dati tecnici certificati e granulari</strong> per ogni singolo articolo:
+            tabelle nutrizionali dettagliate conformi al <strong>Reg. UE 1169/2011</strong>, quantità di sale (g),
+            classificazione del grado di trasformazione industriale <strong>NOVA 1-4</strong>, certificazioni
+            <strong>AIC senza glutine</strong>, intolleranze al lattosio, packaging per locker e profili sensoriali di <strong>Specialty Coffee</strong>.
+          </p>
+
+          <div class="comparison-grid">
+            <div class="comp-box human-box">
+              <div class="comp-header">
+                <span class="comp-icon">👤</span>
+                <h4>L'Esperienza Umana Tradizionale</h4>
+              </div>
+              <p>
+                Un passeggero in corsa verso il binario con soli 15 minuti prima della partenza del Frecciarossa deve
+                sfogliare decine di schede, calcolare a mente i tempi di sosta, verificare l'assenza di glutine, controllare
+                il sale e verificare se l'ordine può essere ritirato allo Smart Locker o al banco.
+              </p>
+              <div class="comp-tag-row">
+                <span class="friction-tag">⚠️ Alto Attrito Cognitivo</span>
+                <span class="friction-tag">⏱️ Rischio Perdita Treno</span>
+              </div>
+            </div>
+
+            <div class="comp-box ai-box">
+              <div class="comp-header">
+                <span class="comp-icon">🤖</span>
+                <h4>La Risoluzione dell'Agente AI (WebMCP)</h4>
+              </div>
+              <p>
+                Un solo prompt in linguaggio naturale (es. <em>"Prendimi uno snack proteico poco salato e un cold brew specialty pronto in 5 minuti al banco"</em>)
+                consente all'Agente AI di interrogare direttamente i tool WebMCP, filtrare matematicamente i metadati ed eseguire l'ordine perfetto in frazioni di secondo.
+              </p>
+              <div class="comp-tag-row">
+                <span class="advantage-tag">⚡ Risoluzione Istantanea</span>
+                <span class="advantage-tag">🎯 Zero Errori Logistici</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: I 5 TOOLS WEBMCP ESPOSTI DALLA PAGINA -->
+        <div class="about-section-card">
+          <div class="sec-badge-row">
+            <span class="tech-badge">🛠️ WEBMCP TOOL REGISTRY</span>
+          </div>
+          <h3 class="about-card-title">I 5 Tool WebMCP Esposti dal Frontend nel Browser</h3>
+          <p class="about-card-lead">
+            L'applicazione registra questi 5 strumenti conformi alla specifica MCP direttamente nell'ambiente del browser
+            (tramite <code>window.__webmcp</code> e <code>navigator.modelContext</code>), sincronizzandoli reattivamente con le <strong>Angular Signals</strong> della pagina:
+          </p>
+
+          <div class="tools-grid">
+            <div class="tool-card">
+              <div class="tool-head">
+                <span class="tool-num">Tool 1</span>
+                <code>searchCatalog</code>
+              </div>
+              <p>Esegue query testuali e filtri a faccette su categorie (Specialty Coffee, Senza Glutine AIC, Senza Lattosio, High-Protein, Bevande).</p>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-head">
+                <span class="tool-num">Tool 2</span>
+                <code>getProductDetails</code>
+              </div>
+              <p>Estrae la scheda tecnica completa dell'articolo: Nutri-Score, NOVA group, sale (g), packaging e claims sugli allergeni.</p>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-head">
+                <span class="tool-num">Tool 3</span>
+                <code>addToCart</code>
+              </div>
+              <p>Aggiunge o incrementa articoli nel carrello e aggiorna istantaneamente il badge e i totali nell'interfaccia utente.</p>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-head">
+                <span class="tool-num">Tool 4</span>
+                <code>configureFulfillment</code>
+              </div>
+              <p>Configura la modalità logistica BOPIS tra Smart Locker (PIN/Box), Ritiro al Banco, Consegna al Posto Treno o Servizio al Tavolo.</p>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-head">
+                <span class="tool-num">Tool 5</span>
+                <code>prepareCheckout</code>
+              </div>
+              <p>Finalizza l'ordine, verifica l'autorizzazione di pagamento (Google Pay, Carta o Mandato AP2) e lo registra nel BOPIS Engine.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: REGOLE FISICHE DI STAZIONE E LOGISTICA BOPIS -->
+        <div class="about-section-card">
+          <div class="sec-badge-row">
+            <span class="station-badge">🚉 REGOLE DI STAZIONE</span>
+          </div>
+          <h3 class="about-card-title">Vincoli Fisici e Termici del Mondo Reale (Milano Centrale)</h3>
+          <p class="about-card-lead">
+            L'e-commerce agentico non è solo un flusso software: deve coordinarsi con i vincoli fisici della stazione ferroviaria:
+          </p>
+
+          <div class="station-rules-grid">
+            <div class="rule-card">
+              <span class="rule-icon">🔥</span>
+              <h4>Regola Termica Alimenti</h4>
+              <p>Divieto assoluto di depositare cibi e bevande calde (caffè espresso, cappuccino, toast caldi) nello Smart Locker per motivi igienico-sanitari e di deterioramento termico.</p>
+            </div>
+
+            <div class="rule-card">
+              <span class="rule-icon">⏰</span>
+              <h4>Preavviso Minimo 30 Minuti</h4>
+              <p>Tassativo per la consegna a bordo treno o per la riserva dello slot Smart Locker prima della partenza del Frecciarossa.</p>
+            </div>
+
+            <div class="rule-card">
+              <span class="rule-icon">⚡</span>
+              <h4>Ritiro Express al Banco</h4>
+              <p>Pronto in soli 5 minuti al Bistrot Binario 12: sempre disponibile per tutti i prodotti caldi e freddi quando il passeggero ha poco tempo.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM ACTION -->
+        <div class="about-footer-action">
+          <button class="btn-hero-catalog" (click)="setActiveView('catalog')">
+            <span>🏬 Sfoglia il Catalogo Prodotti</span>
+          </button>
+        </div>
+      </section>
+    }
+  </main>
+
+  <!-- CART & CHECKOUT MODAL DRAWER -->
+  @if (isCartOpen()) {
+    <div class="cart-backdrop" (click)="closeCart()">
+      <div class="cart-drawer" (click)="$event.stopPropagation()">
+        <!-- DRAWER HEADER -->
+        <div class="drawer-header">
+          <div class="drawer-title-group">
+            <h3>🛒 Il Tuo Carrello Milano Centrale</h3>
+            <span class="drawer-sub">Riepilogo articoli e modalità di ritiro stazione</span>
+          </div>
+          <button class="btn-close-drawer" (click)="closeCart()">✕</button>
+        </div>
+
+        <!-- DRAWER BODY -->
+        <div class="drawer-body">
+          @if (!mcpService.currentCart() || mcpService.currentCart()!.items.length === 0) {
+            <div class="empty-cart-state">
+              <span class="empty-cart-icon">🛒</span>
+              <h4>Il tuo carrello è vuoto</h4>
+              <p>Scegli i tuoi prodotti dal catalogo per iniziare.</p>
+            </div>
+          } @else {
+            <!-- ITEMS LIST -->
+            <div class="cart-items-section">
+              <h4 class="section-label">Articoli Selezionati ({{ mcpService.cartItemsCount() }})</h4>
+              <div class="cart-items-list">
+                @for (item of mcpService.currentCart()!.items; track item.product_id) {
+                  <div class="cart-item-row">
+                    <img [src]="item.image_url" [alt]="item.name" class="cart-item-img" />
+                    <div class="cart-item-info">
+                      <span class="cart-item-name">{{ item.name }}</span>
+                      <span class="cart-item-price">€ {{ item.price.toFixed(2) }} cad.</span>
+                      @if (item.is_hot) {
+                        <span class="hot-warning-tag">🔥 Alimento Caldo (No Locker)</span>
+                      }
+                    </div>
+                    <div class="cart-qty-controls">
+                      <button class="qty-btn" (click)="mcpService.updateItemQuantity(item.product_id, -1)">−</button>
+                      <span class="qty-display">{{ item.quantity }}</span>
+                      <button class="qty-btn" (click)="mcpService.updateItemQuantity(item.product_id, 1)">+</button>
+                    </div>
+                    <div class="cart-item-subtotal">
+                      € {{ ((item.price_cents * item.quantity) / 100).toFixed(2) }}
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- FULFILLMENT SELECTOR (THE 4 BOPIS MODES) -->
+            <div class="fulfillment-section">
+              <h4 class="section-label">Scegli Modalità di Consegna / Ritiro (BOPIS)</h4>
+              <div class="modes-grid">
+                <!-- 1. LOCKER -->
+                <button
+                  class="mode-card"
+                  [class.active]="selectedFulfillment() === 'pickup_locker'"
+                  (click)="onFulfillmentMethodChange('pickup_locker')"
+                >
+                  <div class="mode-head">
+                    <span class="mode-icon">🥪</span>
+                    <strong class="mode-title">Smart Locker</strong>
+                  </div>
+                  <span class="mode-meta">Piano Interrato • Solo Freddo • Preavviso 30m</span>
+                </button>
+
+                <!-- 2. EXPRESS COUNTER -->
+                <button
+                  class="mode-card"
+                  [class.active]="selectedFulfillment() === 'pickup_express'"
+                  (click)="onFulfillmentMethodChange('pickup_express')"
+                >
+                  <div class="mode-head">
+                    <span class="mode-icon">⚡</span>
+                    <strong class="mode-title">Ritiro al Banco</strong>
+                  </div>
+                  <span class="mode-meta">Bistrot Binario 12 • Pronto in 5m • Caldo/Freddo</span>
+                </button>
+
+                <!-- 3. TRAIN DELIVERY -->
+                <button
+                  class="mode-card"
+                  [class.active]="selectedFulfillment() === 'in_seat_train'"
+                  (click)="onFulfillmentMethodChange('in_seat_train')"
+                >
+                  <div class="mode-head">
+                    <span class="mode-icon">🚆</span>
+                    <strong class="mode-title">Al Posto Treno</strong>
+                  </div>
+                  <span class="mode-meta">Frecciarossa/Italo • Finestra 1 min • +€6.50</span>
+                </button>
+
+                <!-- 4. TABLE SERVICE -->
+                <button
+                  class="mode-card"
+                  [class.active]="selectedFulfillment() === 'table_service'"
+                  (click)="onFulfillmentMethodChange('table_service')"
+                >
+                  <div class="mode-head">
+                    <span class="mode-icon">☕</span>
+                    <strong class="mode-title">Al Tavolo Bistrot</strong>
+                  </div>
+                  <span class="mode-meta">Bistrot Binario 12 • Servizio in 5 min</span>
+                </button>
+              </div>
+
+              <!-- METHOD DETAILS CONFIGURATION -->
+              <div class="mode-details-box">
+                @if (selectedFulfillment() === 'pickup_locker') {
+                  <div class="details-form">
+                    <div class="form-row">
+                      <label>Orario Ritiro Locker (Finestra 10 min, Preavviso min 30 min):</label>
+                      <input type="time" class="form-input" [(ngModel)]="lockerSlotTime" (change)="applySelectedFulfillment()" />
+                    </div>
+                    <div class="form-row">
+                      <label>PIN di Sblocco Contactless:</label>
+                      <input type="text" class="form-input" [(ngModel)]="lockerPin" />
+                    </div>
+                  </div>
+                }
+
+                @if (selectedFulfillment() === 'in_seat_train') {
+                  <div class="details-form">
+                    <div class="form-grid-2">
+                      <div class="form-row">
+                        <label>Treno:</label>
+                        <input type="text" class="form-input" [(ngModel)]="trainNumber" />
+                      </div>
+                      <div class="form-row">
+                        <label>Binario:</label>
+                        <input type="text" class="form-input" [(ngModel)]="trainPlatform" />
+                      </div>
+                      <div class="form-row">
+                        <label>Carrozza:</label>
+                        <input type="text" class="form-input" [(ngModel)]="trainCarriage" />
+                      </div>
+                      <div class="form-row">
+                        <label>Posto:</label>
+                        <input type="text" class="form-input" [(ngModel)]="trainSeat" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <label>Orario di Consegna (Finestra attesa 1 minuto):</label>
+                      <input type="time" class="form-input" [(ngModel)]="trainDeliveryTime" (change)="applySelectedFulfillment()" />
+                    </div>
+                  </div>
+                }
+
+                @if (selectedFulfillment() === 'table_service') {
+                  <div class="details-form">
+                    <div class="form-row">
+                      <label>Numero Tavolo Bistrot Binario 12:</label>
+                      <input type="text" class="form-input" [(ngModel)]="tableNumber" />
+                    </div>
+                  </div>
+                }
+
+                @if (selectedFulfillment() === 'pickup_express') {
+                  <div class="express-note">
+                    ✅ Il tuo ordine sarà preparato immediatamente e sarà pronto al banco del Bistrot Binario 12 entro 5 minuti.
+                  </div>
+                }
+              </div>
+
+              <!-- STATION RULES WARNING / ERROR -->
+              @if (mcpService.fulfillmentError(); as errMsg) {
+                <div class="station-rule-error">
+                  <span class="err-icon">⚠️</span>
+                  <div class="err-text">{{ errMsg }}</div>
+                </div>
+              }
+            </div>
+
+            <!-- BUYER ACCOUNT & PROFILE (GOOGLE + FIREBASE AUTH) -->
+            <div class="buyer-section">
+              <h4 class="section-label">👤 Profilo Viaggiatore & Notifiche</h4>
+              @if (currentUser(); as user) {
+                <div class="user-logged-card">
+                  @if (user.photoURL) {
+                    <img [src]="user.photoURL" class="card-avatar-img" alt="Avatar" />
+                  } @else {
+                    <div class="card-avatar">👤</div>
+                  }
+                  <div class="card-info">
+                    <strong class="user-card-name">{{ user.name }}</strong>
+                    <span class="user-card-email">{{ user.email }}</span>
+                    <span class="user-card-tier">⭐ {{ user.loyaltyTier }} · ID: {{ user.loyaltyCode }}</span>
+                    <span class="auth-provider-tag">🔒 Autenticato con Google Firebase</span>
+                  </div>
+                  <button class="btn-card-logout" (click)="logout()" title="Disconnetti account Google">Esci</button>
+                </div>
+              } @else {
+                <div class="guest-warning-card">
+                  <div class="warning-icon">⚠️</div>
+                  <div class="warning-content">
+                    <strong>Accesso con Google Richiesto per il Checkout</strong>
+                    <p>Per associare il codice ritiro dello Smart Locker e completare l'acquisto in sicurezza, accedi con il tuo account Google.</p>
+                    <div class="login-actions-group">
+                      <button class="btn-login-google-action" (click)="loginWithGoogle()">
+                        <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
+                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span>Accedi con Google</span>
+                      </button>
+                      <button class="btn-demo-fallback" (click)="loginDemoUser()" title="Simula rapido (Mario Rossi)">
+                        Simula (Mario Rossi)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- PAYMENT METHOD SELECTION (HUMAN-PRESENT AUTHORIZATION) -->
+            <div class="payment-section">
+              <h4 class="section-label">💳 Metodo di Pagamento Simulato</h4>
+              <div class="pay-methods-grid">
+                <button
+                  type="button"
+                  class="pay-method-btn"
+                  [class.active]="selectedPaymentMethod() === 'gpay'"
+                  (click)="selectPaymentMethod('gpay')"
+                >
+                  <span class="pay-badge-icon">🟢</span>
+                  <div class="pay-btn-text">
+                    <strong>Google Pay</strong>
+                    <span>Wallet Viaggiatore</span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  class="pay-method-btn"
+                  [class.active]="selectedPaymentMethod() === 'card'"
+                  (click)="selectPaymentMethod('card')"
+                >
+                  <span class="pay-badge-icon">💳</span>
+                  <div class="pay-btn-text">
+                    <strong>Carta di Credito</strong>
+                    <span>Visa •••• 4242</span>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  class="pay-method-btn"
+                  [class.active]="selectedPaymentMethod() === 'ap2'"
+                  (click)="selectPaymentMethod('ap2')"
+                >
+                  <span class="pay-badge-icon">🛡️</span>
+                  <div class="pay-btn-text">
+                    <strong>Mandato AP2</strong>
+                    <span>Pre-Approvato ≤ €50</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- PRICE RECAP -->
+            <div class="price-recap-box">
+              <div class="recap-row">
+                <span>Subtotale Articoli:</span>
+                <strong>€ {{ ((mcpService.currentCart()!.subtotal_cents) / 100).toFixed(2) }}</strong>
+              </div>
+              <div class="recap-row">
+                <span>Spese Consegna / Servizio:</span>
+                <strong>€ {{ ((mcpService.currentCart()!.delivery_fee_cents) / 100).toFixed(2) }}</strong>
+              </div>
+              <div class="recap-row total">
+                <span>Totale da Pagare:</span>
+                <span class="total-amount">€ {{ ((mcpService.currentCart()!.total_cents) / 100).toFixed(2) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- DRAWER FOOTER (HUMAN-PRESENT PAYMENT BUTTON) -->
+        @if (mcpService.currentCart() && mcpService.currentCart()!.items.length > 0) {
+          <div class="drawer-footer">
+            <button
+              class="btn-checkout-confirm"
+              (click)="currentUser() ? authorizePayment() : loginWithGoogle()"
+              [disabled]="mcpService.isLoading() || isProcessingPayment()"
+            >
+              @if (isProcessingPayment()) {
+                <span class="spinner"></span>
+                <span>Autorizzazione Pagamento in corso (SCA / AP2)...</span>
+              } @else if (!currentUser()) {
+                <span>🔒 Accedi con Google per Autorizzare e Pagare</span>
+              } @else {
+                <span>🔒 Autorizza & Paga (€ {{ ((mcpService.currentCart()!.total_cents) / 100).toFixed(2) }})</span>
+              }
+            </button>
+            <div class="security-caption">
+              <span>🛡️ Pagamento Human-Present · Conforme a PSD2 SCA & Protocollo Google AP2</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

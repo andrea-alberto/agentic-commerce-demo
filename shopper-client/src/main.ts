@@ -1,0 +1,7 @@
+// Copyright 2026 UCP Authors / GDG DevFest Milano 2026
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { App } from './app/app';
+
+bootstrapApplication(App, appConfig)
+  .catch((err) => console.error('Bootstrap error:', err));

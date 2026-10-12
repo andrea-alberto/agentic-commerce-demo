@@ -1,0 +1,119 @@
+{
+  "version": "1.0",
+  "name": "Milano Centrale Travel Retail WebMCP",
+  "description": "Porta d'accesso WebMCP per lo shopping agentico alla Stazione di Milano Centrale",
+  "url": "http://localhost:4202",
+  "protocol": "webmcp",
+  "tools": [
+    {
+      "name": "searchCatalog",
+      "description": "Cerca articoli e souvenir inserendo il testo nella barra di ricerca della pagina",
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "Query di ricerca" },
+          "category": { "type": "string", "description": "Categoria opzionale" }
+        }
+      }
+    },
+    {
+      "name": "selectCategory",
+      "description": "Filtra la pagina web selezionando un chip di categoria (sandwiches, vegan, coffee, drinks, specialty, gluten_free, lactose_free, high_protein, cold, hot, tech, all)",
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["all", "sandwiches", "vegan", "coffee", "drinks", "specialty", "gluten_free", "lactose_free", "high_protein", "cold", "hot", "tech"],
+            "description": "Chip di categoria da cliccare nella UI"
+          }
+        },
+        "required": ["category"]
+      }
+    },
+    {
+      "name": "getProductDetails",
+      "description": "Ottieni scheda tecnica dettagliata, allergeni, prezzo e compatibilità termica con Smart Locker",
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "product_id": { "type": "string", "description": "ID del prodotto" }
+        },
+        "required": ["product_id"]
+      }
+    },
+    {
+      "name": "createCart",
+      "description": "Crea una nuova sessione di carrello acquisti per il viaggiatore",
+      "annotations": {
+        "consequentialHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "currency": { "type": "string", "default": "EUR" }
+        }
+      }
+    },
+    {
+      "name": "addToCart",
+      "description": "Aggiunge un prodotto e la quantità specificata al carrello attivo",
+      "annotations": {
+        "consequentialHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cart_id": { "type": "string" },
+          "product_id": { "type": "string" },
+          "quantity": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["cart_id", "product_id", "quantity"]
+      }
+    },
+    {
+      "name": "configureFulfillment",
+      "description": "Configura la modalità di ritiro BOPIS tra Smart Locker, Ritiro Banco, Posto Treno o Tavolo",
+      "annotations": {
+        "consequentialHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cart_id": { "type": "string" },
+          "method": {
+            "type": "string",
+            "enum": ["pickup_locker", "pickup_express", "in_seat_train", "table_service"]
+          },
+          "details": { "type": "object" }
+        },
+        "required": ["cart_id", "method"]
+      }
+    },
+    {
+      "name": "checkoutCart",
+      "description": "Finalizza e registra l'ordine nel Motore BOPIS unificato con conferma di orari e slot",
+      "annotations": {
+        "consequentialHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cart_id": { "type": "string" },
+          "buyer_name": { "type": "string" },
+          "buyer_email": { "type": "string" }
+        },
+        "required": ["cart_id"]
+      }
+    }
+  ]
+}

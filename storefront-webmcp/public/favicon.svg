@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg-bistrot-store" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#292524"/>
+      <stop offset="100%" stop-color="#1c1917"/>
+    </linearGradient>
+    <linearGradient id="amber-crema" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg-bistrot-store)"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="url(#amber-crema)" stroke-width="3"/>
+  <path d="M23 23 C23 14 41 14 41 23" fill="none" stroke="#fef3c7" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M16 23 L48 23 L44 49 L20 49 Z" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+  <rect x="27" y="29" width="10" height="12" rx="2" fill="#d97706"/>
+  <circle cx="32" cy="33" r="1.5" fill="#fef3c7"/>
+  <line x1="32" y1="36" x2="32" y2="39" stroke="#fef3c7" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="48" cy="48" r="11" fill="#b45309"/>
+  <circle cx="48" cy="48" r="11" fill="none" stroke="#fde68a" stroke-width="1.5"/>
+  <path d="M49 41 L43 49 L47.5 49 L46.5 55 L53 47 L48.5 47 Z" fill="#ffffff"/>
+</svg>

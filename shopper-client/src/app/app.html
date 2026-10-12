@@ -1,0 +1,412 @@
+<!-- GDG DevFest Milano 2026: Milano Centrale Personal Shopper Client -->
+<div class="shopper-app-container">
+
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-titles">
+          <div class="logo-row">
+            <h1>Personal Shopper Agent</h1>
+            <span class="badge-tag">Gemini AI</span>
+          </div>
+          <span class="logo-sub">Il tuo Assistente Personale di Viaggio · Connesso al Wallet Stazione</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROTOCOL MODE SWITCHER TOGGLE -->
+    <div class="header-center">
+      <div class="mode-switcher-bar">
+        <button
+          type="button"
+          class="mode-btn"
+          [class.active]="shopperService.protocolMode() === 'a2a'"
+          (click)="setMode('a2a')"
+          [disabled]="shopperService.isRunning()"
+        >
+          <span class="btn-icon">🤖</span>
+          <span class="btn-label">Demo 3: Two-Agent A2A</span>
+          <span class="btn-sub">Semantic M2M</span>
+        </button>
+
+        <button
+          type="button"
+          class="mode-btn"
+          [class.active]="shopperService.protocolMode() === 'ucp_rest'"
+          (click)="setMode('ucp_rest')"
+          [disabled]="shopperService.isRunning()"
+        >
+          <span class="btn-icon">🌐</span>
+          <span class="btn-label">Demo 4: UCP REST</span>
+          <span class="btn-sub">RFC 9421 Signatures</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTROLS: CONTEXT TOGGLE, INSPECTOR TOGGLE & USER PILL -->
+    <div class="header-right">
+      <button
+        type="button"
+        class="context-toggle-btn"
+        [class.active]="shopperService.contextExpanded()"
+        (click)="shopperService.toggleContext()"
+        title="Mostra / Nascondi la conoscenza e il contesto dell'agente personale"
+      >
+        <span class="icon">🧠</span>
+        <span class="text">{{ shopperService.contextExpanded() ? 'Nascondi Contesto' : 'Contesto Agente' }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="inspector-toggle-btn"
+        [class.active]="shopperService.inspectorExpanded()"
+        (click)="shopperService.toggleInspector()"
+        title="Mostra / Nascondi il pannello del Protocol Inspector"
+      >
+        <span class="icon">🔍</span>
+        <span class="text">{{ shopperService.inspectorExpanded() ? 'Nascondi Inspector' : 'Mostra Inspector' }}</span>
+      </button>
+
+      <!-- GOOGLE AUTH STATE -->
+      @if (authService.isAuthenticated()) {
+        <div class="user-auth-pill logged-in">
+          <span class="status-dot online"></span>
+          @if (authService.userAvatar()) {
+            <img [src]="authService.userAvatar()!" class="user-avatar-img" alt="Google Avatar" />
+          } @else {
+            <span class="user-avatar">👤</span>
+          }
+          <div class="user-details">
+            <strong class="user-name">{{ authService.userDisplayName() }}</strong>
+            <span class="user-tier">{{ authService.loyaltyTier() }}</span>
+          </div>
+          <button type="button" class="btn-shopper-logout" (click)="authService.logout()" title="Disconnetti account Google">Esci</button>
+        </div>
+      } @else {
+        <div class="auth-actions-group">
+          <button
+            type="button"
+            class="btn-shopper-login"
+            (click)="authService.loginWithGoogle()"
+            title="Accedi con Google per sincronizzare il tuo profilo viaggiatore e il wallet"
+          >
+            <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Accedi con Google</span>
+          </button>
+          <button
+            type="button"
+            class="btn-shopper-demo"
+            (click)="authService.loginDemoUser()"
+            title="Simula rapido (Mario Rossi)"
+          >
+            Demo
+          </button>
+        </div>
+      }
+    </div>
+  </header>
+
+  <!-- MAIN SCROLLABLE CONTENT -->
+  <main class="app-main-content">
+
+    <!-- TRAVELER CONTEXT / AGENT KNOWLEDGE SECTION (DEFAULT CHIUSA/NASCOSTA) -->
+    <section class="context-section" [class.collapsed]="!shopperService.contextExpanded()">
+      @if (shopperService.contextExpanded()) {
+        <div class="context-collapsible-wrapper">
+          <div class="context-section-header">
+            <div class="context-header-left">
+              <span class="context-header-icon">🧠</span>
+              <div>
+                <strong class="context-header-title">Conoscenza & Contesto Agente Personale</strong>
+                <span class="context-header-sub">Dati del biglietto ferroviario, posizione alla stazione e vincoli temporali del viaggiatore</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn-collapse-context"
+              (click)="shopperService.toggleContext()"
+              title="Comprimi la sezione di conoscenza"
+            >
+              <span>▴ Chiudi</span>
+            </button>
+          </div>
+          <lib-traveler-ticket-card
+            [context]="shopperService.travelerContext()"
+            (selectPreset)="onPresetSelected($event)"
+            (editContext)="shopperService.openContextModal()"
+          ></lib-traveler-ticket-card>
+        </div>
+      } @else {
+        <!-- COLLAPSED SUMMARY STRIP (COMPATTA E CLICCABILE) -->
+        <div class="context-summary-strip" (click)="shopperService.toggleContext()" title="Clicca per aprire la conoscenza e gli scenari del viaggiatore">
+          <div class="summary-left">
+            <span class="summary-icon">🧠</span>
+            <div class="summary-text-group">
+              <span class="summary-label">Conoscenza Agente:</span>
+              <strong class="summary-val">{{ shopperService.travelerContext()?.name || 'Mario Rossi' }}</strong>
+              <span class="summary-divider">•</span>
+              <span class="summary-badge train">🚆 {{ shopperService.travelerContext()?.ticket?.train_number || 'Frecciarossa 9540' }}</span>
+              <span class="summary-badge platform">Bin. {{ shopperService.travelerContext()?.ticket?.platform || '14' }}</span>
+              <span class="summary-badge time">⏳ Partenza {{ shopperService.travelerContext()?.ticket?.departure_time || '13:10' }}</span>
+            </div>
+          </div>
+          <button type="button" class="btn-expand-context" (click)="$event.stopPropagation(); shopperService.toggleContext()">
+            <span>▾ Apri Conoscenza & Scenari</span>
+          </button>
+        </div>
+      }
+    </section>
+
+    <!-- SPLIT-VIEW CONTAINER -->
+    <div class="split-view-container" [class.inspector-collapsed]="!shopperService.inspectorExpanded()">
+
+      <!-- LEFT COLUMN: CHAT & SHOPPER DIALOGUE -->
+      <section class="chat-column">
+        <div class="column-card chat-card">
+          <!-- CHAT HEADER MINIMALE CON TASTO RESET -->
+          <div class="card-header chat-header">
+            <div class="chat-header-info">
+              <span class="chat-header-icon">💬</span>
+              <div>
+                <h2 class="card-title">Conversazione con l'Agente</h2>
+              </div>
+              <span class="status-indicator" [class.busy]="shopperService.isRunning()">
+                {{ shopperService.isRunning() ? '⚡ In corso...' : '🟢 Pronto' }}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              class="btn-reset-chat"
+              (click)="resetSession()"
+              [disabled]="shopperService.isRunning()"
+              title="Azzera la conversazione e i passaggi del protocollo"
+            >
+              <span class="reset-icon">↺</span>
+              <span>Nuova Sessione</span>
+            </button>
+          </div>
+
+          <!-- MESSAGES CONTAINER -->
+          <div class="messages-container" #messagesContainer>
+            <div
+              *ngFor="let msg of shopperService.chatMessages()"
+              class="message-row"
+              [id]="'chat-msg-' + msg.id"
+              [class.user-row]="msg.sender === 'user'"
+              [class.agent-row]="msg.sender === 'agent'"
+              [class.system-row]="msg.sender === 'system'"
+            >
+              <!-- SYSTEM PILL -->
+              <div *ngIf="msg.sender === 'system'" class="system-pill">
+                <span>ℹ️ {{ msg.text }}</span>
+              </div>
+
+              <!-- USER BUBBLE -->
+              <div
+                *ngIf="msg.sender === 'user'"
+                class="user-bubble"
+                [class.bubble-highlighted]="highlightedMessageId === msg.id"
+              >
+                <div class="bubble-header">
+                  <span class="sender-name">Tu (Viaggiatore)</span>
+                  <span class="msg-time">{{ msg.timestamp }}</span>
+                </div>
+                <div class="bubble-body">{{ msg.text }}</div>
+                <div class="msg-protocol-correlation" *ngIf="msg.stepNumbers?.length">
+                  <button
+                    type="button"
+                    class="btn-corr-pill"
+                    (click)="jumpToInspector(msg.stepNumbers[0], msg.stepNumbers)"
+                    title="Allinea l'Inspector ai passaggi di rete corrispondenti"
+                  >
+                    <span class="pill-dot"></span>
+                    <span class="pill-icon">📡</span>
+                    <span class="pill-text">{{ formatStepRange(msg.stepNumbers) }}</span>
+                    <span class="pill-arrow">➔</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- AGENT BUBBLE -->
+              <div
+                *ngIf="msg.sender === 'agent'"
+                class="agent-bubble"
+                [class.bubble-highlighted]="highlightedMessageId === msg.id"
+              >
+                <div class="bubble-header">
+                  <div class="bubble-header-left">
+                    <span class="agent-avatar">🤖</span>
+                    <span class="sender-name">Personal Shopper Agent</span>
+                  </div>
+                  <div class="bubble-header-right">
+                    <button
+                      *ngIf="msg.stepNumbers?.length"
+                      type="button"
+                      class="btn-corr-pill"
+                      (click)="jumpToInspector(msg.stepNumbers[0], msg.stepNumbers)"
+                      title="Allinea l'Inspector ai passaggi di rete corrispondenti"
+                    >
+                      <span class="pill-dot"></span>
+                      <span class="pill-icon">📡</span>
+                      <span class="pill-text">{{ formatStepRange(msg.stepNumbers) }}</span>
+                      <span class="pill-arrow">➔</span>
+                    </button>
+                    <span class="msg-time">{{ msg.timestamp }}</span>
+                  </div>
+                </div>
+                <div class="bubble-body">
+                  <p class="agent-text">{{ msg.text }}</p>
+
+                  <!-- PROPOSAL CARD WITH FULFILLMENT SELECTOR -->
+                  <lib-proposal-card
+                    *ngIf="msg.proposal"
+                    [proposal]="msg.proposal"
+                    [disabled]="shopperService.confirmedOrder() !== null"
+                    (confirm)="onConfirmProposal($event)"
+                  ></lib-proposal-card>
+
+                  <!-- CONFIRMED ORDER CARD EMBEDDED -->
+                  <div *ngIf="msg.order" class="embedded-order-card">
+                    <div class="order-card-header">
+                      <div class="order-id-group">
+                        <span class="badge-channel">{{ msg.order.channel_label || (msg.order.protocol === 'a2a' ? 'A2A Agent M2M' : 'UCP REST Binding') }}</span>
+                        <strong class="order-id">{{ msg.order.order_id }}</strong>
+                      </div>
+                      <span class="order-status-badge">🟢 Confermato & In Preparazione</span>
+                    </div>
+
+                    <div class="order-card-body">
+                      <!-- ITEMS LIST -->
+                      <div class="order-items-summary" *ngIf="msg.order.items?.length">
+                        <div *ngFor="let item of msg.order.items" class="order-item-row">
+                          <span class="item-name">📦 {{ item.title || item.name }} (x{{ item.quantity || 1 }})</span>
+                          <span class="item-price">€{{ formatCents(item.price_cents) }}</span>
+                        </div>
+                      </div>
+
+                      <!-- FULFILLMENT ROW -->
+                      <div class="order-fl-row">
+                        <span class="fl-icon">🚆</span>
+                        <div class="fl-text">
+                          <strong>{{ msg.order.fulfillment_details?.label || 'Consegna alla carrozza' }}</strong>
+                          <span class="fl-sub">
+                            {{ msg.order.fulfillment_details?.train_number }} · Carrozza {{ msg.order.fulfillment_details?.carriage }} · Posto {{ msg.order.fulfillment_details?.seat }}
+                            <ng-container *ngIf="msg.order.fulfillment_details?.pin_code">
+                              · Codice Locker PIN: <strong>{{ msg.order.fulfillment_details?.pin_code }}</strong>
+                            </ng-container>
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- TOTALS & AP2 SHIELD -->
+                      <div class="order-totals-row">
+                        <div class="ap2-shield-pill">
+                          <span>🛡️ Mandato Autonomo AP2 Verificato (FIDO2)</span>
+                        </div>
+                        <div class="total-amount">
+                          <span>Totale:</span>
+                          <strong>€{{ formatCents(msg.order.totals?.total_cents || msg.order.total_cents) }}</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="order-card-footer">
+                      <span>📡 Visualizzabile in tempo reale sulla <strong>BOPIS Hub Dashboard (Porta 4201)</strong></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STREAMING TYPING INDICATOR -->
+            <div *ngIf="shopperService.isRunning()" class="typing-indicator-row">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-label">
+                {{ shopperService.protocolMode() === 'a2a' ? 'Negoziazione semantica in corso con l\'agente della stazione...' : 'Esecuzione sequenza REST UCP con firma RFC 9421...' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- SUGGESTIONS CHIPS -->
+          <div class="suggestions-row" *ngIf="!shopperService.isRunning()">
+            <span class="sugg-label">💡 Scenari & Testi Ufficiali DevFest:</span>
+            <button
+              *ngFor="let s of quickSuggestions"
+              type="button"
+              class="sugg-chip"
+              [class.chip-rest]="s.mode === 'ucp_rest'"
+              [class.chip-a2a]="s.mode === 'a2a'"
+              [title]="s.query"
+              (click)="sendPrompt(s.query, s)"
+            >
+              {{ s.label }}
+            </button>
+          </div>
+
+          <!-- INPUT FORM -->
+          <form class="chat-input-bar" (ngSubmit)="sendPrompt()">
+            <input
+              type="text"
+              class="prompt-input"
+              [(ngModel)]="inputText"
+              name="promptInput"
+              placeholder="Chiedi al Personal Shopper (es: 'Vorrei ordinare il pranzo con consegna al treno')..."
+              [disabled]="shopperService.isRunning()"
+            />
+            <button
+              type="submit"
+              class="btn-send"
+              [disabled]="!inputText.trim() || shopperService.isRunning()"
+            >
+              <span *ngIf="!shopperService.isRunning()">Invia ➔</span>
+              <span *ngIf="shopperService.isRunning()">...</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: LIVE PROTOCOL INSPECTOR -->
+      <section class="inspector-column" *ngIf="shopperService.inspectorExpanded()">
+        <lib-protocol-inspector
+          [theme]="'shopper'"
+          [steps]="shopperService.protocolSteps()"
+          [isLive]="shopperService.isRunning()"
+          [protocolBadge]="shopperService.protocolMode() === 'a2a' ? 'Demo 3: A2A Semantic M2M' : 'Demo 4: UCP REST (RFC 9421)'"
+          [protocolClass]="shopperService.protocolMode() === 'a2a' ? 'demo3' : 'demo4'"
+          [title]="'Live Protocol Inspector'"
+          [subtitle]="'Traccia dei messaggi di rete e conformità alle specifiche UCP & AP2'"
+          [highlightedStepNumbers]="highlightedStepNumbers"
+          (stepSelected)="onStepSelected($event)"
+        ></lib-protocol-inspector>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- TRAVELER CONTEXT MODAL DIALOG -->
+  <lib-traveler-context-modal
+    *ngIf="shopperService.isModalOpen()"
+    [context]="shopperService.travelerContext()"
+    (close)="shopperService.closeContextModal()"
+    (save)="onSaveContext($event)"
+  ></lib-traveler-context-modal>
+
+  <!-- AP2 HUMAN-PRESENT LOCAL CREDENTIAL MANAGER MODAL -->
+  <lib-traveler-lcm-modal
+    *ngIf="shopperService.isLcmModalOpen()"
+    [challenge]="shopperService.pendingChallenge()"
+    (cancel)="shopperService.cancelChallenge()"
+    (authorized)="shopperService.authorizeChallenge($event)"
+  ></lib-traveler-lcm-modal>
+
+</div>

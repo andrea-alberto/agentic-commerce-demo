@@ -1,0 +1,35 @@
+# Milano Centrale Travel Retail Storefront
+> Specifica e Documentazione AI per Agenti Autonomi e WebMCP
+
+Benvenuto nel portale e-commerce abilitato per agenti AI della Stazione di Milano Centrale, sviluppato per il GDG DevFest Milano 2026.
+Questo sito supporta sia l'interfaccia umana sia il protocollo W3C / Angular 22 WebMCP (`window.navigator.modelContext` e `document.modelContext`), oltre all'endpoint server standard Model Context Protocol (MCP) JSON-RPC.
+
+## Architettura e BOPIS Engine
+Tutti gli ordini convergono sul motore unificato BOPIS (Buy Online, Pick up In Station) e sono tracciati in tempo reale sulla Kanban Dashboard di stazione (`http://localhost:4201`).
+
+## Regole di Stazione e Vincoli Operativi
+1. **Smart Locker Contactless (Piano Interrato)**:
+   - Solo articoli freddi (`is_hot: false`). Vietato qualsiasi cibo o bevanda calda per preservare la qualità alimentare.
+   - Richiede un preavviso minimo di 30 minuti rispetto all'orario attuale.
+   - Slot configurati a intervalli di 10 minuti (es. 19:10 - 19:20).
+   - Assegna un numero di box (es. Box #14) e un PIN di sblocco a 4 cifre.
+2. **Ritiro Express al Banco (Bistrot Binario 12)**:
+   - Pronto in 5 minuti.
+   - Nessun preavviso richiesto.
+   - Ammette qualsiasi articolo (sia caldo che freddo).
+3. **Consegna al Posto Treno (Frecciarossa / Italo)**:
+   - Richiede numero treno, binario, carrozza e posto a sedere.
+   - Finestra di attesa del fattorino al binario: massimo 1 minuto.
+   - Preavviso minimo richiesto: 30 minuti.
+   - Supplemento di consegna: €6.50.
+4. **Servizio al Tavolo Bistrot (Binario 12)**:
+   - Richiede numero tavolo.
+   - Finestra di servizio: 5 minuti.
+
+## Tool WebMCP Esposti
+- `searchCatalog`: Ricerca prodotti per testo o categoria (`Caffetteria`, `Gastronomia`, `Tech`).
+- `getProductDetails`: Scheda tecnica, allergeni, prezzo e compatibilità con Smart Locker.
+- `createCart`: Apertura nuova sessione di carrello spesa.
+- `addToCart`: Aggiunta prodotto e quantità al carrello.
+- `configureFulfillment`: Scelta del metodo di ritiro (`pickup_locker`, `pickup_express`, `in_seat_train`, `table_service`).
+- `checkoutCart`: Finalizzazione dell'ordine con nome ed email acquirente.

@@ -1,0 +1,26 @@
+{
+  "name": "agentic-commerce-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nx run-many -t serve --parallel",
+    "serve:all": "nx run-many -t serve --parallel",
+    "serve:chat": "nx run chat-client:serve",
+    "serve:dashboard": "nx run bopis-dashboard:serve",
+    "serve:storefront": "nx run storefront-webmcp:serve",
+    "serve:shopper": "nx run shopper-client:serve",
+    "serve:shopper-backend": "nx run backend-shopper:serve",
+    "serve:backend": "nx run backend-merchant:serve",
+    "test:backend": "nx run backend-merchant:test",
+    "test:unit": "nx run backend-merchant:test:unit",
+    "test:mcp": "nx run backend-merchant:test:mcp",
+    "warmup": "python scratch/verify_all_demos.py",
+    "build:chat": "nx run chat-client:build",
+    "build:dashboard": "nx run bopis-dashboard:build",
+    "build:storefront": "nx run storefront-webmcp:build",
+    "build:shopper": "nx run shopper-client:build"
+  },
+  "devDependencies": {
+    "nx": "^23.2.1"
+  }
+}

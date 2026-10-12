@@ -1,0 +1,65 @@
+{
+  "capabilities": {
+    "extensions": [
+      {
+        "description": "UCP Extension",
+        "required": true,
+        "uri": "https://ucp.dev/2026-01-23/specification/overview?v=2026-01-23",
+        "params": {
+          "capabilities": [
+            {
+              "version": "2026-01-23",
+              "spec": "https://ucp.dev/2026-01-23/specification/shopping/checkout",
+              "schema": "https://ucp.dev/2026-01-23/schemas/shopping/checkout.json"
+            },
+            {
+              "version": "2026-01-23",
+              "spec": "https://ucp.dev/2026-01-23/specification/shopping/fulfillment",
+              "schema": "https://ucp.dev/2026-01-23/schemas/shopping/fulfillment.json",
+              "extends": "dev.ucp.shopping.checkout"
+            },
+            {
+              "version": "2026-01-23",
+              "spec": "https://ucp.dev/2026-01-23/specification/shopping/discount",
+              "schema": "https://ucp.dev/2026-01-23/schemas/shopping/discount.json",
+              "extends": "dev.ucp.shopping.checkout"
+            }
+          ]
+        }
+      }
+    ],
+    "streaming": false
+  },
+  "defaultInputModes": ["text", "text/plain", "application/json"],
+  "defaultOutputModes": ["text", "text/plain", "application/json"],
+  "description": "Milano Centrale Hub Travel Retail Agent - GDG DevFest 2026",
+  "name": "Milano Centrale Travel Retail Agent",
+  "preferredTransport": "JSONRPC",
+  "protocolVersion": "0.3.0",
+  "provider": {
+    "organization": "Milano Centrale Hub",
+    "url": "http://milanocentrale.example.it"
+  },
+  "skills": [
+    {
+      "description": "Cerca nel catalogo prodotti food, bevande ed elettronica da viaggio per la Stazione di Milano Centrale",
+      "examples": ["Vorrei un caffè caldo prima di prendere il treno", "Ho fame, cosa posso ritirare al volo allo smart locker?"],
+      "id": "product_search",
+      "name": "Ricerca Catalogo Prodotti",
+      "tags": ["shopping", "food", "travel", "milano"]
+    },
+    {
+      "description": "Gestisce sessione di checkout con supporto ritiro express al banco, smart locker o consegna a bordo treno",
+      "examples": [
+        "Aggiungi un caffè e un cornetto al carrello",
+        "Consegna al mio posto sul Frecciarossa 9540",
+        "Procedi al pagamento"
+      ],
+      "id": "checkout",
+      "name": "Checkout UCP & Fulfillment",
+      "tags": ["checkout", "bopis", "in-seat delivery"]
+    }
+  ],
+  "url": "http://localhost:10999",
+  "version": "1.0.0"
+}

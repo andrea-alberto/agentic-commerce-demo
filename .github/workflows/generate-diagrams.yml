@@ -1,0 +1,52 @@
+name: Generate Architecture Diagrams
+
+on:
+  push:
+    paths:
+      - 'docs/diagrams/**.py'
+      - 'docs/diagrams/requirements.txt'
+      - '.github/workflows/generate-diagrams.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-diagrams:
+    name: Build & Commit Architecture Diagrams
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'docs/diagrams/requirements.txt'
+
+      - name: Install System Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz fonts-liberation
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r docs/diagrams/requirements.txt
+
+      - name: Render Architecture Diagram (PNG & SVG)
+        run: |
+          python docs/diagrams/gcp_architecture.py
+
+      - name: Commit and Push Generated Diagrams
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs(diagrams): regenerate GCP architecture diagram [skip ci]"
+          file_pattern: "docs/images/*"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"

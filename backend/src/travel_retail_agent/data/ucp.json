@@ -1,0 +1,65 @@
+{
+  "ucp": {
+    "version": "2026-01-23",
+    "services": {
+      "dev.ucp.shopping": {
+        "version": "2026-01-23",
+        "spec": "https://ucp.dev/2026-01-23/specification/shopping",
+        "a2a": {
+          "endpoint": "http://localhost:10999/.well-known/agent-card.json"
+        },
+        "rest": {
+          "endpoint": "http://localhost:10999/ucp"
+        }
+      }
+    },
+    "capabilities": [
+      {
+        "name": "dev.ucp.shopping.checkout",
+        "version": "2026-01-23",
+        "spec": "https://ucp.dev/2026-01-23/specification/shopping/checkout",
+        "schema": "https://ucp.dev/2026-01-23/schemas/shopping/checkout.json"
+      },
+      {
+        "name": "dev.ucp.shopping.fulfillment",
+        "version": "2026-01-23",
+        "spec": "https://ucp.dev/2026-01-23/specification/shopping/fulfillment",
+        "schema": "https://ucp.dev/2026-01-23/schemas/shopping/fulfillment.json",
+        "extends": "dev.ucp.shopping.checkout",
+        "config": {
+          "supported_methods": [
+            {
+              "type": "pickup",
+              "description": "Ritiro in stazione: al banco Bistrot Binario 12 (pronto in 5 min) o Smart Locker piano interrato (solo articoli confezionati/freddi)"
+            },
+            {
+              "type": "shipping",
+              "description": "Consegna al posto a bordo treno Frecciarossa/Italo (+€6.50)"
+            }
+          ],
+          "method_combinations": [
+            ["pickup"],
+            ["shipping"]
+          ]
+        }
+      }
+    ]
+  },
+  "payment": {
+    "handlers": [
+      {
+        "id": "example_payment_provider",
+        "name": "example.payment.provider",
+        "version": "2026-01-23",
+        "spec": "https://pay.provider.example/specs/handlers/payments",
+        "config_schema": "https://pay.provider.example/specs/handlers/config.json",
+        "instrument_schemas": [
+          "https://ucp.dev/2026-01-23/schemas/shopping/types/card_payment_instrument.json"
+        ],
+        "config": {
+          "business_id": "MILANO-CENTRALE-RETAIL-01"
+        }
+      }
+    ]
+  }
+}

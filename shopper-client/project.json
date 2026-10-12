@@ -1,0 +1,18 @@
+{
+  "name": "shopper-client",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "command": "npm start",
+      "options": {
+        "cwd": "shopper-client"
+      }
+    },
+    "build": {
+      "command": "npm run build",
+      "options": {
+        "cwd": "shopper-client"
+      }
+    }
+  }
+}

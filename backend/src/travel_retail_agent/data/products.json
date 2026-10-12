@@ -1,0 +1,1180 @@
+[
+  {
+    "@type": "Product",
+    "productID": "CAFFE-001",
+    "name": "Espresso Doppio Illy Caldo",
+    "sku": "CAFFE-ILLY-01",
+    "image": ["https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Illy Caffè Milano"
+    },
+    "offers": {
+      "price": "2.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Espresso doppio caldo estratto al momento con miscela 100% Arabica Illy. Bevanda calda, da consumare subito.",
+    "category": "Food & Beverage > Caffetteria Calda",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 40,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "hot" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "1" },
+      { "@type": "PropertyValue", "name": "coffee_specialty", "value": "true" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 5,
+        "fat_g": 0.1,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 0.4,
+        "sugars_g": 0.0,
+        "protein_g": 0.2,
+        "salt_g": 0.0
+      },
+      "nutri_score": "A",
+      "health_claims": ["zero_sugar", "zero_calories", "antioxidants", "low_salt"]
+    },
+    "processing_level": {
+      "nova_group": 1,
+      "nova_label": "NOVA 1: Non Processato",
+      "is_ultra_processed": false,
+      "ingredients_count": 1,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_glutine", "senza_lattosio", "halal", "kosher"],
+      "allergens_present": [],
+      "allergens_traces": [],
+      "certifications": ["100% Arabica Sostenibile"]
+    },
+    "coffee_profile": {
+      "bean_variety": "100% Arabica Specialty Selection",
+      "origin_country": "Brasile Cerrado & Etiopia Sidamo",
+      "terroir_elevation_meters": 1400,
+      "processing_method": "washed",
+      "roast_level": "medium",
+      "brewing_method": "espresso",
+      "temperature_served": "hot",
+      "tasting_notes": ["cioccolato_fondente", "caramello", "mandorla_tostata"],
+      "acidity_level": "balanced",
+      "body": "full",
+      "caffeine_content_mg": 65
+    },
+    "sustainability": {
+      "origin": "Torrefazione Illy Trieste / Selezione Diretta",
+      "eco_score": "A",
+      "packaging": "Tazza compostabile certificata"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "aromatic",
+      "shelf_life_unrefrigerated_hours": 1
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "CAPPU-002",
+    "name": "Cappuccino Caldo con Brioche al Pistacchio",
+    "sku": "COLAZ-MIL-02",
+    "image": ["https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Pasticceria Centrale"
+    },
+    "offers": {
+      "price": "4.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Cappuccino cremoso caldo montato con latte fresco italiano e croissant farcito con crema al pistacchio di Bronte.",
+    "category": "Food & Beverage > Colazione Calda",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 220,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "hot" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "D" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "4" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 460,
+        "fat_g": 22.0,
+        "saturated_fat_g": 9.5,
+        "carbohydrates_g": 54.0,
+        "sugars_g": 28.0,
+        "protein_g": 9.0,
+        "salt_g": 0.9
+      },
+      "nutri_score": "D",
+      "health_claims": ["energy_boost"]
+    },
+    "processing_level": {
+      "nova_group": 4,
+      "nova_label": "NOVA 4: Ultraprocessato (Crema industriale)",
+      "is_ultra_processed": true,
+      "ingredients_count": 14,
+      "has_artificial_preservatives": true,
+      "has_palm_oil": false,
+      "has_refined_sugars": true
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegetariano"],
+      "allergens_present": ["latte", "glutine", "frutta_a_guscio", "uova", "soia"],
+      "allergens_traces": ["sesamo"],
+      "certifications": ["Pistacchio di Bronte DOP"]
+    },
+    "coffee_profile": {
+      "bean_variety": "100% Arabica Blend Italiano",
+      "origin_country": "Brasile & Colombia",
+      "terroir_elevation_meters": 1200,
+      "roast_level": "medium",
+      "brewing_method": "cappuccino_steam",
+      "temperature_served": "hot",
+      "tasting_notes": ["latte_cremoso", "crema_pistacchio"],
+      "acidity_level": "low",
+      "body": "silky",
+      "caffeine_content_mg": 65
+    },
+    "sustainability": {
+      "origin": "Latte fresco Lombardia & Pistacchio Sicilia",
+      "eco_score": "C",
+      "packaging": "Tazza termica riciclabile"
+    },
+    "travel_profile": {
+      "convenience": "table_needed",
+      "mess_factor": "crumbs_risk",
+      "odor_intensity": "mild",
+      "shelf_life_unrefrigerated_hours": 1
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "PAST-002",
+    "name": "Brioche Artigianale al Pistacchio di Bronte",
+    "sku": "PAST-BRIOCH-PIST",
+    "image": ["https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Pasticceria Centrale Milano"
+    },
+    "offers": {
+      "price": "2.20",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Croissant sfogliato artigianale farcito con crema pasticcera al pistacchio di Bronte DOP e granella croccante. Ideale per la colazione al banco o da asporto.",
+    "category": "Food & Beverage > Pasticceria & Dolci",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 90,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegetarian" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "C" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 280,
+        "fat_g": 14.0,
+        "saturated_fat_g": 6.5,
+        "carbohydrates_g": 34.0,
+        "sugars_g": 16.0,
+        "protein_g": 5.5,
+        "salt_g": 0.4
+      },
+      "nutri_score": "C",
+      "health_claims": ["artisanal_pastry", "pistacchio_dop"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Pasticceria Artigianale",
+      "is_ultra_processed": false,
+      "ingredients_count": 6,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": true
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegetariano"],
+      "allergens_present": ["glutine", "latte", "uova", "frutta_a_guscio"],
+      "allergens_traces": ["sesamo", "soia"],
+      "certifications": ["Pistacchio di Bronte DOP"]
+    },
+    "sustainability": {
+      "origin": "Laboratorio Pasticceria Milano & Pistacchio Sicilia",
+      "eco_score": "B",
+      "packaging": "Sacchetto in carta alimentare riciclabile"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "crumbs_risk",
+      "odor_intensity": "mild",
+      "shelf_life_unrefrigerated_hours": 24
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "TOAST-003",
+    "name": "Focaccia Toast Calda con Prosciutto Cotto e Fontina",
+    "sku": "TOAST-COTTO-03",
+    "image": ["https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Bistrot Milano Centrale"
+    },
+    "offers": {
+      "price": "6.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Focaccia ligure tostata al momento, con prosciutto cotto alta qualità e fontina DOP fusa. Servita calda.",
+    "category": "Food & Beverage > Panini Caldi",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 180,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "hot" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "C" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 420,
+        "fat_g": 18.0,
+        "saturated_fat_g": 7.2,
+        "carbohydrates_g": 44.0,
+        "sugars_g": 2.1,
+        "protein_g": 18.0,
+        "salt_g": 1.8
+      },
+      "nutri_score": "C",
+      "health_claims": ["source_of_protein", "dop_cheese"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Processato Artigianale Cucina",
+      "is_ultra_processed": false,
+      "ingredients_count": 5,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": [],
+      "allergens_present": ["glutine", "latte"],
+      "allergens_traces": ["sesamo", "soia"],
+      "certifications": ["Fontina Valle d'Aosta DOP", "Prosciutto Alta Qualità Italiano"]
+    },
+    "sustainability": {
+      "origin": "Filiera Artigianale Ligure-Lombarda",
+      "eco_score": "B",
+      "packaging": "Carta termica 100% riciclabile"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "crumbs_risk",
+      "odor_intensity": "aromatic",
+      "shelf_life_unrefrigerated_hours": 2
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "PANIN-004",
+    "name": "Ciabatta con Crudo di Parma 24 Mesi e Mozzarella di Bufala (Freddo)",
+    "sku": "PANIN-CRUDO-04",
+    "image": ["https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Gourmet Travel Milano"
+    },
+    "offers": {
+      "price": "7.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Sandwich freddo artigianale confezionato in atmosfera protetta. Perfetto per smart locker o viaggio in treno.",
+    "category": "Food & Beverage > Panini Freddi",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 210,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "C" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 490,
+        "fat_g": 20.0,
+        "saturated_fat_g": 8.0,
+        "carbohydrates_g": 52.0,
+        "sugars_g": 1.8,
+        "protein_g": 22.0,
+        "salt_g": 2.1
+      },
+      "nutri_score": "C",
+      "health_claims": ["high_protein", "traditional_dop"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Processato Tradizionale DOP",
+      "is_ultra_processed": false,
+      "ingredients_count": 4,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": [],
+      "allergens_present": ["glutine", "latte"],
+      "allergens_traces": ["sesamo"],
+      "certifications": ["Prosciutto di Parma 24 Mesi DOP", "Mozzarella di Bufala Campana DOP"]
+    },
+    "sustainability": {
+      "origin": "Parma & Caserta DOP",
+      "eco_score": "B",
+      "packaging": "Involucro biodegradabile protettivo"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "mild",
+      "shelf_life_unrefrigerated_hours": 4
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "INSAL-005",
+    "name": "Insalata Caesar Fresca con Pollo e Crostini",
+    "sku": "INSAL-CAESAR-05",
+    "image": ["https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Green Station Milano"
+    },
+    "offers": {
+      "price": "8.00",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Insalata fresca confezionata con dressing a parte e posate biodegradabili incluse. Conservare a temperatura controllata.",
+    "category": "Food & Beverage > Insalate Fredde",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 260,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "B" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 340,
+        "fat_g": 14.0,
+        "saturated_fat_g": 3.5,
+        "carbohydrates_g": 22.0,
+        "sugars_g": 2.5,
+        "protein_g": 26.0,
+        "salt_g": 1.1
+      },
+      "nutri_score": "B",
+      "health_claims": ["high_protein", "low_sugar", "source_of_fiber"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Preparazione Fresca con Dressing",
+      "is_ultra_processed": false,
+      "ingredients_count": 7,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": [],
+      "allergens_present": ["glutine", "latte", "uova", "pesce"],
+      "allergens_traces": ["senape"],
+      "certifications": ["Pollo 100% Italiano Allevato a Terra"]
+    },
+    "sustainability": {
+      "origin": "Lombardia & Emilia-Romagna",
+      "eco_score": "B",
+      "packaging": "Ciotola in bagassa compostabile con forchetta in legno"
+    },
+    "travel_profile": {
+      "convenience": "table_needed",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 3
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "BEV-006",
+    "name": "Acqua San Pellegrino Frizzante 500ml",
+    "sku": "BEV-SPEL-06",
+    "image": ["https://images.unsplash.com/photo-1560023907-5f339617ea30?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "San Pellegrino"
+    },
+    "offers": {
+      "price": "1.80",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Bottiglietta da 500ml in PET 100% riciclabile. Fresca.",
+    "category": "Food & Beverage > Bevande Fredde",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 500,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "1" }
+    ],
+    "nutrition": {
+      "per_100g": {
+        "energy_kcal": 0,
+        "fat_g": 0.0,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 0.0,
+        "sugars_g": 0.0,
+        "protein_g": 0.0,
+        "salt_g": 0.01
+      },
+      "per_serving": {
+        "energy_kcal": 0,
+        "fat_g": 0.0,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 0.0,
+        "sugars_g": 0.0,
+        "protein_g": 0.0,
+        "salt_g": 0.05
+      },
+      "nutri_score": "A",
+      "health_claims": ["zero_calories", "sodium_free", "pure_mineral"]
+    },
+    "processing_level": {
+      "nova_group": 1,
+      "nova_label": "NOVA 1: Non Processato (Acqua Minerale)",
+      "is_ultra_processed": false,
+      "ingredients_count": 1,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_glutine", "senza_lattosio", "halal", "kosher"],
+      "allergens_present": [],
+      "allergens_traces": [],
+      "certifications": ["Sorgente Val Brembana BG"]
+    },
+    "sustainability": {
+      "origin": "San Pellegrino Terme (BG)",
+      "eco_score": "A",
+      "packaging": "PET 100% riciclabile"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 720
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "BEV-007",
+    "name": "Spremuta Fresca di Arance di Sicilia 300ml",
+    "sku": "BEV-SPREM-07",
+    "image": ["https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Bistrot Milano Centrale"
+    },
+    "offers": {
+      "price": "3.80",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Spremuta espressa fresca non pastorizzata, 100% arance rosse siciliane.",
+    "category": "Food & Beverage > Bevande Fredde",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 300,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "1" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 110,
+        "fat_g": 0.2,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 26.0,
+        "sugars_g": 22.0,
+        "protein_g": 2.1,
+        "salt_g": 0.0
+      },
+      "nutri_score": "A",
+      "health_claims": ["vitamin_c", "no_added_sugars", "100_percent_fruit", "low_salt"]
+    },
+    "processing_level": {
+      "nova_group": 1,
+      "nova_label": "NOVA 1: Non Processato (100% Frutta Espressa)",
+      "is_ultra_processed": false,
+      "ingredients_count": 1,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_glutine", "senza_lattosio", "halal", "kosher"],
+      "allergens_present": [],
+      "allergens_traces": [],
+      "certifications": ["Arancia Rossa di Sicilia IGP"]
+    },
+    "sustainability": {
+      "origin": "Piana di Catania IGP",
+      "eco_score": "A",
+      "packaging": "Bicchiere in PLA compostabile"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 3
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "COFFEE-017",
+    "name": "Single Origin Cold Brew Specialty (Etiopia Yirgacheffe Bio 250ml)",
+    "sku": "BREW-ETIO-17",
+    "image": ["https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Roastery Milano Centrale"
+    },
+    "offers": {
+      "price": "4.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Cold Brew Specialty estratto lentamente a freddo per 16 ore da chicchi 100% Arabica Etiopia Yirgacheffe Bio. Naturale dolcezza, zero acidità sgradevole, alto tenore di caffeina (160mg). Servito freddo in bottiglia di vetro riciclabile, ideale per Smart Locker e treno.",
+    "category": "Food & Beverage > Specialty Coffee Freddo",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 250,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "1" },
+      { "@type": "PropertyValue", "name": "coffee_specialty", "value": "true" }
+    ],
+    "nutrition": {
+      "per_100g": {
+        "energy_kcal": 2,
+        "fat_g": 0.0,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 0.4,
+        "sugars_g": 0.0,
+        "protein_g": 0.2,
+        "salt_g": 0.0
+      },
+      "per_serving": {
+        "energy_kcal": 5,
+        "fat_g": 0.0,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 1.0,
+        "sugars_g": 0.0,
+        "protein_g": 0.5,
+        "salt_g": 0.0
+      },
+      "nutri_score": "A",
+      "health_claims": ["zero_sugar", "zero_fat", "high_caffeine", "low_acidity", "low_salt"]
+    },
+    "processing_level": {
+      "nova_group": 1,
+      "nova_label": "NOVA 1: Non Processato (Estrazione Pura a Freddo)",
+      "is_ultra_processed": false,
+      "ingredients_count": 2,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_glutine", "senza_lattosio", "halal", "kosher", "bio"],
+      "allergens_present": [],
+      "allergens_traces": [],
+      "certifications": ["Bio Agricoltura UE", "Specialty Coffee Association (SCA 87+)", "Fairtrade"]
+    },
+    "coffee_profile": {
+      "bean_variety": "100% Arabica Specialty Singola Origine",
+      "origin_country": "Etiopia Yirgacheffe",
+      "terroir_elevation_meters": 1950,
+      "processing_method": "washed",
+      "roast_level": "light",
+      "brewing_method": "cold_brew_16h",
+      "temperature_served": "cold",
+      "tasting_notes": ["bergamotto", "gelsomino", "pesca_bianca", "agrumi_dolci"],
+      "acidity_level": "low",
+      "body": "silky",
+      "caffeine_content_mg": 160
+    },
+    "sustainability": {
+      "origin": "Yirgacheffe Bio / Imbottigliato fresco a Milano",
+      "eco_score": "A",
+      "packaging": "Bottiglia in vetro 100% riciclabile con tappo twist-off"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 12
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "SNACK-013",
+    "name": "Barretta Raw Bio Datteri & Mandorle High-Protein (Senza Glutine AIC)",
+    "sku": "SNACK-RAW-13",
+    "image": ["https://images.unsplash.com/photo-1622484216850-466d7e0081d0?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "BioActive Travel Nutrition"
+    },
+    "offers": {
+      "price": "2.80",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Barretta energetica cruda 100% biologica con solo 4 ingredienti grezzi: datteri Medjool, mandorle di Sicilia, proteine isolate del pisello bio e cacao crudo. Senza zuccheri aggiunti, ricca di fibre, 11g di proteine nette a barretta. Pratica al morso, zero briciole per laptop in carrozza silenzio.",
+    "category": "Food & Beverage > Snack Salutari",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 50,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "1" }
+    ],
+    "nutrition": {
+      "per_100g": {
+        "energy_kcal": 380,
+        "fat_g": 12.0,
+        "saturated_fat_g": 1.4,
+        "carbohydrates_g": 46.0,
+        "sugars_g": 28.0,
+        "protein_g": 22.0,
+        "salt_g": 0.05,
+        "fiber_g": 8.5
+      },
+      "per_serving": {
+        "energy_kcal": 190,
+        "fat_g": 6.0,
+        "saturated_fat_g": 0.7,
+        "carbohydrates_g": 23.0,
+        "sugars_g": 14.0,
+        "protein_g": 11.0,
+        "salt_g": 0.02,
+        "fiber_g": 4.2
+      },
+      "nutri_score": "A",
+      "health_claims": ["high_protein", "low_salt", "no_added_sugars", "raw_food", "source_of_fiber"]
+    },
+    "processing_level": {
+      "nova_group": 1,
+      "nova_label": "NOVA 1: Cibo Raw Grezzo (Solo 4 Ingredienti Puri)",
+      "is_ultra_processed": false,
+      "ingredients_count": 4,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_glutine", "senza_lattosio", "halal", "kosher", "bio"],
+      "allergens_present": ["frutta_a_guscio"],
+      "allergens_traces": [],
+      "certifications": ["Spiga Barrata AIC Senza Glutine", "Bio Agricoltura UE", "Raw Vegan", "Non OGM"]
+    },
+    "sustainability": {
+      "origin": "Mandorle di Sicilia e Datteri Bio",
+      "eco_score": "A",
+      "packaging": "Involucro 100% compostabile da cellulosa vegetale"
+    },
+    "travel_profile": {
+      "convenience": "pocket_snack",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 720
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "POKE-014",
+    "name": "Poké Bowl Riso Venere, Salmone Bio & Avocado (Senza Lattosio)",
+    "sku": "POKE-SALM-14",
+    "image": ["https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Healthy Bowl Milano Centrale"
+    },
+    "offers": {
+      "price": "9.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Ciotola fresca bilanciata preparata al momento con riso Venere integrale italiano, salmone atlantico marinato bio, avocado fresco, edamame, cetriolo e salsa ponzu senza glutine. Ricca di Omega-3, alto apporto proteico (24g), naturalmente priva di lattosio. Perfetta per Smart Locker o consumo a bordo treno.",
+    "category": "Food & Beverage > Piatti Unici Freddi",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 280,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "1" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 480,
+        "fat_g": 14.0,
+        "saturated_fat_g": 2.1,
+        "carbohydrates_g": 60.0,
+        "sugars_g": 2.4,
+        "protein_g": 24.0,
+        "salt_g": 0.8,
+        "fiber_g": 6.5
+      },
+      "nutri_score": "A",
+      "health_claims": ["high_protein", "low_salt", "omega_3", "lactose_free", "balanced_meal"]
+    },
+    "processing_level": {
+      "nova_group": 1,
+      "nova_label": "NOVA 1: Ingredienti Freschi Interi Assemblati",
+      "is_ultra_processed": false,
+      "ingredients_count": 6,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["senza_lattosio", "senza_glutine", "pescetariano", "halal"],
+      "allergens_present": ["pesce", "soia"],
+      "allergens_traces": ["sesamo"],
+      "certifications": ["Salmone Bio ASC/MSC", "Riso Venere Italiano Filiera Riserie Vercelli"]
+    },
+    "sustainability": {
+      "origin": "Piemonte (riso) & Norvegia bio",
+      "eco_score": "A",
+      "packaging": "Bowl in bagassa di canna da zucchero con coperchio in rPET riciclato"
+    },
+    "travel_profile": {
+      "convenience": "table_needed",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 5
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "PAST-015",
+    "name": "Muffin Artigianale Cacao (Gluten & Lactose Free Certificato AIC)",
+    "sku": "MUFFIN-GF-15",
+    "image": ["https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Laboratorio Senza Glutine Milano"
+    },
+    "offers": {
+      "price": "3.50",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Muffin soffice al cacao olandese e gocce di cioccolato fondente 70%. Confezionato singolarmente in camera sterile per garantire la totale assenza di contaminazione crociata. Doppia certificazione ufficiale: Spiga Barrata AIC Senza Glutine e Lfree Senza Lattosio.",
+    "category": "Food & Beverage > Dolci & Colazione",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 80,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegetarian" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "C" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_100g": {
+        "energy_kcal": 360,
+        "fat_g": 14.0,
+        "saturated_fat_g": 3.2,
+        "carbohydrates_g": 52.0,
+        "sugars_g": 22.0,
+        "protein_g": 6.0,
+        "salt_g": 0.35
+      },
+      "per_serving": {
+        "energy_kcal": 288,
+        "fat_g": 11.2,
+        "saturated_fat_g": 2.5,
+        "carbohydrates_g": 41.6,
+        "sugars_g": 17.6,
+        "protein_g": 4.8,
+        "salt_g": 0.28
+      },
+      "nutri_score": "C",
+      "health_claims": ["gluten_free_certified", "lactose_free_certified", "vegetarian"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Pasticceria Artigianale Senza Glutine",
+      "is_ultra_processed": false,
+      "ingredients_count": 7,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": true
+    },
+    "dietary_profile": {
+      "dietary_tags": ["senza_glutine", "senza_lattosio", "vegetariano"],
+      "allergens_present": ["uova"],
+      "allergens_traces": ["frutta_a_guscio"],
+      "certifications": ["Marchio Spiga Barrata AIC", "Certificato Senza Lattosio Lfree <0.01%"]
+    },
+    "sustainability": {
+      "origin": "Laboratorio artigianale certificato Milano",
+      "eco_score": "B",
+      "packaging": "Film plastico riciclabile monodose termosaldato anti-cross contamination"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "crumbs_risk",
+      "odor_intensity": "mild",
+      "shelf_life_unrefrigerated_hours": 120
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "TECH-016",
+    "name": "Adattatore da Viaggio Ultra-Slim 45W GaN Multi-Spina Universale",
+    "sku": "TECH-ADAPT-45W",
+    "image": ["https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Nomad Station Travel"
+    },
+    "offers": {
+      "price": "24.90",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Adattatore da viaggio compatto universale con tecnologia GaN 45W. Prese scorrevoli integrate per oltre 150 paesi (EU, UK, USA, AUS, IT). Include 2 porte USB-C Power Delivery e 1 porta USB-A QuickCharge. Protezione da sovracorrente e fusibile autoripristinante.",
+    "category": "Travel Essentials > Elettronica",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 85,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" }
+    ],
+    "tech_specs": {
+      "power_watts": 45,
+      "protocols": ["Gallium Nitride (GaN III)", "USB-PD 3.0 PPS", "Universal World Plug"],
+      "connectors": ["Spina scorrevole EU/UK/US/AU/IT", "2x USB-C (max 45W)", "1x USB-A (max 18W)"]
+    },
+    "sustainability": {
+      "origin": "Design Europeo & Certificazione CE/RoHS",
+      "eco_score": "A",
+      "packaging": "Scatola in cartone kraft 100% riciclato senza plastica"
+    },
+    "travel_profile": {
+      "convenience": "pocket_snack",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 8760
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "TECH-008",
+    "name": "Powerbank Magnetico 10.000 mAh MagSafe USB-C",
+    "sku": "TECH-PB-10K",
+    "image": ["https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Anker Travel"
+    },
+    "offers": {
+      "price": "34.90",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Batteria portatile ricaricabile compatibile MagSafe e USB-C Power Delivery. Ideale per lunghi viaggi in treno.",
+    "category": "Travel Essentials > Elettronica",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 210,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" }
+    ],
+    "tech_specs": {
+      "power_watts": 20,
+      "capacity_mah": 10000,
+      "protocols": ["Apple MagSafe", "Qi Wireless", "USB-PD 3.0"],
+      "connectors": ["USB-C Input/Output", "Wireless Magnetic Pad"]
+    },
+    "travel_profile": {
+      "convenience": "pocket_snack",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral"
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "TECH-009",
+    "name": "Caricatore GaN Ultra-Fast 65W USB-C con Cavo Intrecciato",
+    "sku": "TECH-GAN-65W",
+    "image": ["https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Baseus Station"
+    },
+    "offers": {
+      "price": "29.90",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Alimentatore da viaggio compatto GaN 65W per laptop e smartphone con cavo USB-C da 1.5m ad alta resistenza.",
+    "category": "Travel Essentials > Elettronica",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 145,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" }
+    ],
+    "tech_specs": {
+      "power_watts": 65,
+      "protocols": ["Gallium Nitride (GaN)", "USB-PD 3.0", "QuickCharge 4.0", "Samsung Super Fast Charging"],
+      "connectors": ["2x USB-C", "1x USB-A", "Cavo Type-C 1.5m incluso"]
+    },
+    "travel_profile": {
+      "convenience": "pocket_snack",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral"
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "TECH-010",
+    "name": "Cuffie Noise-Cancelling Bluetooth da Viaggio",
+    "sku": "TECH-NC-EARS",
+    "image": ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Sony Audio"
+    },
+    "offers": {
+      "price": "49.00",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Cuffie wireless con cancellazione attiva del rumore (ANC) ideali per isolarsi dai rumori della stazione e del treno.",
+    "category": "Travel Essentials > Audio",
+    "packaging_type": "prepackaged",
+    "net_weight_g": 220,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "ambient" }
+    ],
+    "tech_specs": {
+      "anc_noise_cancellation_db": 35,
+      "protocols": ["Bluetooth 5.3", "LDAC Hi-Res Audio", "Multi-point connection"],
+      "battery_hours": 30
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral"
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "VEG-011",
+    "name": "Croissant Vegano ai Frutti di Bosco",
+    "sku": "COLAZ-VEG-11",
+    "image": ["https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Pasticceria Naturale Milano"
+    },
+    "offers": {
+      "price": "3.20",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Croissant sfogliato 100% vegetale per colazione vegana, lievitazione naturale e confettura extra di frutti di bosco italiani. Senza latte né uova.",
+    "category": "Food & Beverage > Colazione Calda",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 95,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "hot" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "C" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 310,
+        "fat_g": 13.0,
+        "saturated_fat_g": 4.2,
+        "carbohydrates_g": 42.0,
+        "sugars_g": 18.0,
+        "protein_g": 5.0,
+        "salt_g": 0.45
+      },
+      "nutri_score": "C",
+      "health_claims": ["plant_based", "dairy_free", "egg_free"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Pasticceria Vegetale Artigianale",
+      "is_ultra_processed": false,
+      "ingredients_count": 6,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": true
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_lattosio", "halal"],
+      "allergens_present": ["glutine"],
+      "allergens_traces": ["frutta_a_guscio", "soia", "sesamo"],
+      "certifications": ["Vegan OK", "Lievito Madre Naturale"]
+    },
+    "sustainability": {
+      "origin": "Frutti di bosco del Trentino & Farina bio",
+      "eco_score": "B",
+      "packaging": "Sacchetto in carta pergamino compostabile"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "crumbs_risk",
+      "odor_intensity": "mild",
+      "shelf_life_unrefrigerated_hours": 8
+    }
+  },
+  {
+    "@type": "Product",
+    "productID": "VEG-012",
+    "name": "Panino Vegano con Hummus e Verdure Grigliate (Freddo)",
+    "sku": "PANIN-VEG-12",
+    "image": ["https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?w=400&q=80"],
+    "brand": {
+      "@type": "Brand",
+      "name": "Green Station Milano"
+    },
+    "offers": {
+      "price": "7.00",
+      "priceCurrency": "EUR",
+      "priceSpecification": null,
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    },
+    "description": "Panino vegano con pane ai multicereali, cremoso hummus di ceci ed erbe fini, melanzane e zucchine grigliate. Fresco e idoneo per Smart Locker.",
+    "category": "Food & Beverage > Panini Freddi",
+    "packaging_type": "fresh_service",
+    "net_weight_g": 200,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "temperature", "value": "cold" },
+      { "@type": "PropertyValue", "name": "dietary", "value": "vegan" },
+      { "@type": "PropertyValue", "name": "nutri_score", "value": "A" },
+      { "@type": "PropertyValue", "name": "nova_group", "value": "3" }
+    ],
+    "nutrition": {
+      "per_serving": {
+        "energy_kcal": 380,
+        "fat_g": 11.0,
+        "saturated_fat_g": 1.5,
+        "carbohydrates_g": 54.0,
+        "sugars_g": 3.5,
+        "protein_g": 12.0,
+        "salt_g": 0.9,
+        "fiber_g": 7.0
+      },
+      "nutri_score": "A",
+      "health_claims": ["plant_based", "source_of_fiber", "low_saturated_fat", "low_salt"]
+    },
+    "processing_level": {
+      "nova_group": 3,
+      "nova_label": "NOVA 3: Fresco Artigianale Multicereali",
+      "is_ultra_processed": false,
+      "ingredients_count": 5,
+      "has_artificial_preservatives": false,
+      "has_palm_oil": false,
+      "has_refined_sugars": false
+    },
+    "dietary_profile": {
+      "dietary_tags": ["vegano", "vegetariano", "senza_lattosio", "halal", "kosher"],
+      "allergens_present": ["glutine", "sesamo"],
+      "allergens_traces": ["soia", "senape"],
+      "certifications": ["100% Vegan Certified", "Olio Extravergine 100% Italiano"]
+    },
+    "sustainability": {
+      "origin": "Verdure a Km 0 Parco Agricolo Sud Milano",
+      "eco_score": "A",
+      "packaging": "Involucro carta kraft riciclata"
+    },
+    "travel_profile": {
+      "convenience": "one_hand_eat",
+      "mess_factor": "clean_no_crumbs",
+      "odor_intensity": "neutral",
+      "shelf_life_unrefrigerated_hours": 6
+    }
+  }
+]

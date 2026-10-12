@@ -1,0 +1,20 @@
+{
+  "/api": {
+    "target": "http://localhost:10999",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  },
+  "/.well-known": {
+    "target": "http://localhost:10999",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/images": {
+    "target": "http://localhost:10999",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

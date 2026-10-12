@@ -1,0 +1,33 @@
+{
+  "name": "backend-merchant",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "command": ".venv\\Scripts\\python.exe -m travel_retail_agent.main --port 10999",
+      "options": {
+        "cwd": "backend"
+      }
+    },
+    "test": {
+      "command": ".venv\\Scripts\\python.exe test_fulfillment_flow.py",
+      "options": {
+        "cwd": "backend"
+      }
+    },
+    "test:unit": {
+      "command": ".venv\\Scripts\\python.exe -m unittest discover -s tests -p \"test_*.py\"",
+      "options": {
+        "cwd": "backend",
+        "env": {
+          "PYTHONPATH": "src"
+        }
+      }
+    },
+    "test:mcp": {
+      "command": ".venv\\Scripts\\python.exe test_mcp_flow.py",
+      "options": {
+        "cwd": "backend"
+      }
+    }
+  }
+}

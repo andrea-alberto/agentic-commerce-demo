@@ -1,0 +1,443 @@
+<div class="dashboard-root">
+  <app-header />
+
+  <!-- MANDATORY OPERATOR GOOGLE AUTH GATE -->
+  @if (!authService.isAuthenticated()) {
+    <div class="auth-gate-container">
+      <div class="auth-gate-card">
+        <div class="gate-logo">
+          <span>📦</span>
+        </div>
+        <h2 class="gate-title">Bistrot Milano Centrale (Binario 12)</h2>
+        <div class="gate-badge">Dashboard Operativa BOPIS & KDS · GDG DevFest 2026</div>
+        <p class="gate-desc">
+          Console di controllo operativo per la preparazione cucina e consegna ordini multicanale
+          (UCP, Web MCP, Two-Agent A2A e UCP REST).<br>
+          Accesso riservato agli operatori di stazione autorizzati.
+        </p>
+
+        @if (authService.error()) {
+          <div class="gate-error">⚠️ {{ authService.error() }}</div>
+        }
+
+        <button class="gate-login-btn" (click)="authService.loginWithGoogle()">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Accedi con Google (Operatore BOPIS)
+        </button>
+
+        <div class="gate-footnote">
+          Protetto da Firebase Authentication · Collezione Firestore merchant_users
+        </div>
+      </div>
+    </div>
+  } @else if (!authService.isOperator()) {
+    <!-- AUTHENTICATED BUT NOT AUTHORIZED (NOT AN OPERATOR IN merchant_users) -->
+    <div class="auth-gate-container">
+      <div class="auth-gate-card" style="border-color: #fca5a5;">
+        <div class="gate-logo" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+          <span>🛑</span>
+        </div>
+        <h2 class="gate-title" style="color: #991b1b;">Accesso Riservato agli Operatori</h2>
+        <div class="gate-badge" style="background: #fee2e2; color: #991b1b; border-color: #fca5a5;">
+          Permessi Insufficienti · Ruolo Operatore Richiesto
+        </div>
+        <p class="gate-desc">
+          L'account <strong>{{ authService.user()?.email }}</strong> è autenticato con successo ma <strong>non è censito come Operatore</strong> nella collezione <code>merchant_users</code> del Bistrot Milano Centrale.
+        </p>
+
+        <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 0.85rem; margin: 1rem 0; font-size: 0.82rem; color: #9f1239; text-align: left; line-height: 1.4;">
+          ℹ️ <strong>Gestione Accessi:</strong> L'abilitazione degli operatori avviene manualmente nella console Firestore o nella configurazione di stazione. Per accedere con un account abilitato, esegui il logout.
+        </div>
+
+        <button class="gate-login-btn" style="background: #ef4444; color: white;" (click)="authService.logout()">
+          Disconnetti Account ({{ authService.user()?.email }})
+        </button>
+      </div>
+    </div>
+  } @else {
+    <!-- AUTHENTICATED: OPERATOR KANBAN VIEW -->
+    <main class="dashboard-body">
+      <!-- KPI METRIC ROW -->
+      <section class="kpi-grid">
+        <div class="kpi-card total">
+          <div class="kpi-num">{{ bopisService.stats().total_orders }}</div>
+          <div class="kpi-label">Ordini Totali Ricevuti</div>
+        </div>
+
+        <div class="kpi-card preparing">
+          <div class="kpi-num">{{ bopisService.stats().preparing }}</div>
+          <div class="kpi-label">⏳ In Preparazione Cucina</div>
+        </div>
+
+        <div class="kpi-card ready">
+          <div class="kpi-num">{{ bopisService.stats().ready_for_pickup }}</div>
+          <div class="kpi-label">🟢 Pronti al Ritiro / Binario</div>
+        </div>
+
+        <div class="kpi-card completed">
+          <div class="kpi-num">{{ bopisService.stats().completed }}</div>
+          <div class="kpi-label">✅ Consegnati con Successo</div>
+        </div>
+      </section>
+
+      <!-- CHANNEL FILTER TOOLBAR -->
+      <div class="filter-toolbar">
+        <div class="filter-label">Filtra Canale Ricezione:</div>
+        <div class="chips-row">
+          <button
+            class="chip-btn"
+            [class.active]="bopisService.selectedChannelFilter() === 'all'"
+            (click)="bopisService.selectedChannelFilter.set('all')">
+            Tutti i Canali ({{ bopisService.orders().length }})
+          </button>
+          <button
+            class="chip-btn demo1"
+            [class.active]="bopisService.selectedChannelFilter() === 'ucp_direct_a2a'"
+            (click)="bopisService.selectedChannelFilter.set('ucp_direct_a2a')">
+            Demo 1: UCP Direct A2A ({{ bopisService.stats().by_channel['ucp_direct_a2a'] || 0 }})
+          </button>
+          <button
+            class="chip-btn demo2"
+            [class.active]="bopisService.selectedChannelFilter() === 'web_mcp'"
+            (click)="bopisService.selectedChannelFilter.set('web_mcp')">
+            Demo 2: Web MCP ({{ bopisService.stats().by_channel['web_mcp'] || 0 }})
+          </button>
+          <button
+            class="chip-btn demo3"
+            [class.active]="bopisService.selectedChannelFilter() === 'two_agent_a2a'"
+            (click)="bopisService.selectedChannelFilter.set('two_agent_a2a')">
+            Demo 3: Two-Agent A2A ({{ bopisService.stats().by_channel['two_agent_a2a'] || 0 }})
+          </button>
+          <button
+            class="chip-btn demo4"
+            [class.active]="bopisService.selectedChannelFilter() === 'ucp_rest'"
+            (click)="bopisService.selectedChannelFilter.set('ucp_rest')">
+            Demo 4: UCP REST ({{ bopisService.stats().by_channel['ucp_rest'] || 0 }})
+          </button>
+        </div>
+      </div>
+
+      <!-- KANBAN BOARD -->
+      <div class="kanban-grid">
+        <!-- COLUMN 1: IN PREPARAZIONE -->
+        <div class="kanban-column preparing-column">
+          <div class="col-head">
+            <h3>⏳ In Preparazione ({{ getOrdersByStatus('preparing').length }})</h3>
+            <span class="col-sub">Bistrot / Cucina prepara l'ordine</span>
+          </div>
+
+          <div class="cards-list">
+            @for (order of getOrdersByStatus('preparing'); track order.order_id) {
+              <div class="bopis-card" [class.train-border]="order.fulfillment_type === 'in_seat_train'">
+                <div class="card-header-row">
+                  <span class="card-id">{{ order.order_id }}</span>
+                  <span class="channel-tag" [ngClass]="getChannelClass(order.channel_source)">
+                    {{ order.channel_label }}
+                  </span>
+                </div>
+
+                <!-- TIMING BADGE: DATA E ORA INSERIMENTO & CONSEGNA RICHIESTA -->
+                <div class="timing-badge-box">
+                  <div class="timing-row">
+                    <div class="timing-col">
+                      <span class="timing-label">📥 Inserito</span>
+                      <span class="timing-val">{{ formatPlacedAt(order) }}</span>
+                    </div>
+                    <div class="timing-arrow">➔</div>
+                    <div class="timing-col target">
+                      <span class="timing-label">⏱️ Consegna Richiesta</span>
+                      <span class="timing-val highlight">{{ formatRequestedDelivery(order) }}</span>
+                    </div>
+                  </div>
+                  @if (order.lead_time_minutes !== undefined && order.lead_time_minutes !== null) {
+                    <div class="lead-time-tag" [class.urgent]="order.lead_time_minutes <= 10">
+                      ⏳ Preavviso: <strong>{{ order.lead_time_minutes }} min</strong>
+                    </div>
+                  }
+                </div>
+
+                <!-- FULFILLMENT HERO -->
+                <div class="fulfillment-banner" [ngClass]="order.fulfillment_type">
+                  @if (order.fulfillment_type === 'in_seat_train') {
+                    <div class="banner-content train">
+                      <span class="banner-icon">🚆</span>
+                      <div class="banner-info">
+                        <div class="banner-title">{{ order.fulfillment_details.train_number }} • {{ order.fulfillment_details.platform }}</div>
+                        <div class="banner-sub">
+                          Carrozza <strong>{{ order.fulfillment_details.carriage }}</strong>, Posto <strong>{{ order.fulfillment_details.seat }}</strong>
+                        </div>
+                        <div class="banner-time">
+                          Consegna: ⏱️ {{ order.fulfillment_details.window || order.fulfillment_details.delivery_time }}
+                          <span class="badge-urgent">Max 1 min</span>
+                        </div>
+                      </div>
+                    </div>
+                  } @else if (order.fulfillment_type === 'pickup_locker') {
+                    <div class="banner-content locker">
+                      <span class="banner-icon">🔐</span>
+                      <div class="banner-info">
+                        <div class="banner-title">{{ order.fulfillment_details.location }}</div>
+                        <div class="banner-pills">
+                          <span class="box-tag">{{ order.fulfillment_details.box_number || 'Box #14' }}</span>
+                          <span class="pin-tag">PIN: <strong>{{ order.fulfillment_details.pin_code }}</strong></span>
+                        </div>
+                        <div class="banner-time">
+                          Finestra: {{ order.fulfillment_details.slot_start }} – {{ order.fulfillment_details.slot_end }}
+                        </div>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="banner-content express">
+                      <span class="banner-icon">☕</span>
+                      <div class="banner-info">
+                        <div class="banner-title">Bistrot Binario 12</div>
+                        <div class="banner-sub">{{ order.fulfillment_details.table_number || 'Ritiro al Banco' }}</div>
+                        <div class="banner-time">Pronto in 5 min</div>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- ITEMS LIST -->
+                <div class="card-items">
+                  @for (item of order.items; track item.id) {
+                    <div class="card-item-row">
+                      <span class="qty">{{ item.quantity }}x</span>
+                      <span class="title">{{ item.title }}</span>
+                      <span class="price">€{{ (item.price_cents * item.quantity / 100).toFixed(2) }}</span>
+                    </div>
+                  }
+                </div>
+
+                <!-- FOOTER -->
+                <div class="card-bottom">
+                  @if (order.payment_method === 'gpay' || order.payment_info?.method === 'gpay') {
+                    <div class="pay-shield gpay">
+                      <span>🟢</span>
+                      <span>Google Pay</span>
+                    </div>
+                  } @else if (order.payment_method === 'card' || order.payment_info?.method === 'card') {
+                    <div class="pay-shield card">
+                      <span>💳</span>
+                      <span>Carta di Credito</span>
+                    </div>
+                  } @else if (order.ap2_verification || order.payment_method === 'ap2') {
+                    <div class="ap2-shield">
+                      <span>🛡️</span>
+                      <span>AP2 LCM Verificato</span>
+                    </div>
+                  } @else {
+                    <div class="pay-shield default">
+                      <span>💳</span>
+                      <span>Pagamento Verificato</span>
+                    </div>
+                  }
+                  <div class="card-price">
+                    Totale: <strong>€{{ (order.totals.total_cents / 100).toFixed(2) }}</strong>
+                  </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="card-btn-row">
+                  <button class="btn-advance ready" (click)="bopisService.updateOrderStatus(order.order_id, 'ready_for_pickup')">
+                    🟢 Segna Pronto al Ritiro / Partenza
+                  </button>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-state">Nessun ordine in preparazione</div>
+            }
+          </div>
+        </div>
+
+        <!-- COLUMN 2: PRONTO AL RITIRO / BINARIO -->
+        <div class="kanban-column ready-column">
+          <div class="col-head">
+            <h3>🟢 Pronti al Ritiro / Binario ({{ getOrdersByStatus('ready_for_pickup').length }})</h3>
+            <span class="col-sub">Passeggero in arrivo o corriere al binario</span>
+          </div>
+
+          <div class="cards-list">
+            @for (order of getOrdersByStatus('ready_for_pickup'); track order.order_id) {
+              <div class="bopis-card ready-card" [class.train-border]="order.fulfillment_type === 'in_seat_train'">
+                <div class="card-header-row">
+                  <span class="card-id">{{ order.order_id }}</span>
+                  <span class="channel-tag" [ngClass]="getChannelClass(order.channel_source)">
+                    {{ order.channel_label }}
+                  </span>
+                </div>
+
+                <!-- TIMING BADGE: DATA E ORA INSERIMENTO & CONSEGNA RICHIESTA -->
+                <div class="timing-badge-box">
+                  <div class="timing-row">
+                    <div class="timing-col">
+                      <span class="timing-label">📥 Inserito</span>
+                      <span class="timing-val">{{ formatPlacedAt(order) }}</span>
+                    </div>
+                    <div class="timing-arrow">➔</div>
+                    <div class="timing-col target">
+                      <span class="timing-label">⏱️ Consegna Richiesta</span>
+                      <span class="timing-val highlight">{{ formatRequestedDelivery(order) }}</span>
+                    </div>
+                  </div>
+                  @if (order.lead_time_minutes !== undefined && order.lead_time_minutes !== null) {
+                    <div class="lead-time-tag" [class.urgent]="order.lead_time_minutes <= 10">
+                      ⏳ Preavviso: <strong>{{ order.lead_time_minutes }} min</strong>
+                    </div>
+                  }
+                </div>
+
+                <div class="fulfillment-banner" [ngClass]="order.fulfillment_type">
+                  @if (order.fulfillment_type === 'in_seat_train') {
+                    <div class="banner-content train">
+                      <span class="banner-icon">🚆</span>
+                      <div class="banner-info">
+                        <div class="banner-title">{{ order.fulfillment_details.train_number }} • {{ order.fulfillment_details.platform }}</div>
+                        <div class="banner-sub">
+                          Carrozza <strong>{{ order.fulfillment_details.carriage }}</strong>, Posto <strong>{{ order.fulfillment_details.seat }}</strong>
+                        </div>
+                        <div class="banner-time highlight">
+                          Corriere in banchina • Finestra ⏱️ {{ order.fulfillment_details.window || order.fulfillment_details.delivery_time }}
+                        </div>
+                      </div>
+                    </div>
+                  } @else if (order.fulfillment_type === 'pickup_locker') {
+                    <div class="banner-content locker">
+                      <span class="banner-icon">🔐</span>
+                      <div class="banner-info">
+                        <div class="banner-title">{{ order.fulfillment_details.location }}</div>
+                        <div class="banner-pills">
+                          <span class="box-tag active">Caricato in {{ order.fulfillment_details.box_number || 'Box #14' }}</span>
+                          <span class="pin-tag">PIN: <strong>{{ order.fulfillment_details.pin_code }}</strong></span>
+                        </div>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="banner-content express">
+                      <span class="banner-icon">☕</span>
+                      <div class="banner-info">
+                        <div class="banner-title">Bistrot Binario 12</div>
+                        <div class="banner-sub">{{ order.fulfillment_details.table_number || 'Pronto al Banco' }}</div>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <div class="card-items">
+                  @for (item of order.items; track item.id) {
+                    <div class="card-item-row">
+                      <span class="qty">{{ item.quantity }}x</span>
+                      <span class="title">{{ item.title }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="card-bottom">
+                  @if (order.payment_method === 'gpay' || order.payment_info?.method === 'gpay') {
+                    <div class="pay-shield gpay">
+                      <span>🟢</span>
+                      <span>Google Pay</span>
+                    </div>
+                  } @else if (order.payment_method === 'card' || order.payment_info?.method === 'card') {
+                    <div class="pay-shield card">
+                      <span>💳</span>
+                      <span>Carta di Credito</span>
+                    </div>
+                  } @else if (order.ap2_verification || order.payment_method === 'ap2') {
+                    <div class="ap2-shield">
+                      <span>🛡️</span>
+                      <span>AP2 LCM Verificato</span>
+                    </div>
+                  } @else {
+                    <div class="pay-shield default">
+                      <span>💳</span>
+                      <span>Pagamento Verificato</span>
+                    </div>
+                  }
+                  <div class="card-price">
+                    Totale: <strong>€{{ (order.totals.total_cents / 100).toFixed(2) }}</strong>
+                  </div>
+                </div>
+
+                <div class="card-btn-row">
+                  <button class="btn-advance complete" (click)="bopisService.updateOrderStatus(order.order_id, 'completed')">
+                    ✅ Conferma Consegna Effettuata
+                  </button>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-state">Nessun ordine in attesa di ritiro</div>
+            }
+          </div>
+        </div>
+
+        <!-- COLUMN 3: CONSEGNATI -->
+        <div class="kanban-column completed-column">
+          <div class="col-head">
+            <h3>✅ Consegnati ({{ getOrdersByStatus('completed').length }})</h3>
+            <span class="col-sub">Ordini ritirati / consegnati al viaggiatore</span>
+          </div>
+
+          <div class="cards-list">
+            @for (order of getOrdersByStatus('completed'); track order.order_id) {
+              <div class="bopis-card completed-card">
+                <div class="card-header-row">
+                  <span class="card-id">{{ order.order_id }}</span>
+                  <span class="channel-tag" [ngClass]="getChannelClass(order.channel_source)">
+                    {{ order.channel_label }}
+                  </span>
+                </div>
+
+                <!-- TIMING BADGE: DATA E ORA INSERIMENTO & CONSEGNA RICHIESTA -->
+                <div class="timing-badge-box">
+                  <div class="timing-row">
+                    <div class="timing-col">
+                      <span class="timing-label">📥 Inserito</span>
+                      <span class="timing-val">{{ formatPlacedAt(order) }}</span>
+                    </div>
+                    <div class="timing-arrow">➔</div>
+                    <div class="timing-col target">
+                      <span class="timing-label">⏱️ Consegna Richiesta</span>
+                      <span class="timing-val highlight">{{ formatRequestedDelivery(order) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="completed-info-box">
+                  <div class="info-row">
+                    <span>{{ order.fulfillment_type === 'in_seat_train' ? '🚆' : (order.fulfillment_type === 'pickup_locker' ? '🔐' : '☕') }}</span>
+                    <span>{{ order.fulfillment_details.train_number || order.fulfillment_details.location || 'Banco Bistrot' }}</span>
+                  </div>
+                  <div class="info-row sub">
+                    <span>👤 {{ order.buyer.email || order.buyer.name }}</span>
+                    <span>
+                      @if (order.payment_method === 'gpay' || order.payment_info?.method === 'gpay') {
+                        🟢 Google Pay
+                      } @else if (order.payment_method === 'card' || order.payment_info?.method === 'card') {
+                        💳 Carta
+                      } @else if (order.ap2_verification || order.payment_method === 'ap2') {
+                        🛡️ AP2
+                      }
+                      • <strong>€{{ (order.totals.total_cents / 100).toFixed(2) }}</strong>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="archived-notice">
+                  <span>Archiviato con successo</span>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-state">Nessun ordine completato</div>
+            }
+          </div>
+        </div>
+      </div>
+    </main>
+  }
+</div>

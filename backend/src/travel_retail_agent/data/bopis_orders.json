@@ -1,0 +1,206 @@
+[
+  {
+    "order_id": "ORD-MI-9540A",
+    "created_at": "2026-10-12T09:00:00.000000+02:00",
+    "updated_at": "2026-10-12T09:10:00.000000+02:00",
+    "channel_source": "ucp_direct_a2a",
+    "channel_label": "Demo 1: Direct A2A",
+    "status": "preparing",
+    "fulfillment_type": "in_seat_train",
+    "fulfillment_details": {
+      "train_number": "Frecciarossa 9540",
+      "platform": "Binario 14",
+      "carriage": "Carrozza 4",
+      "seat": "12D",
+      "delivery_time": "13:14",
+      "window": "13:14 - 13:15",
+      "delivery_fee_cents": 650,
+      "target_minutes_left": 18
+    },
+    "items": [
+      {
+        "id": "PANIN-004",
+        "title": "Ciabatta con Crudo di Parma DOP e Mozzarella",
+        "quantity": 1,
+        "price_cents": 850,
+        "image_url": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500&q=80"
+      },
+      {
+        "id": "BEV-001",
+        "title": "Caffè Espresso Selezione 100% Arabica",
+        "quantity": 1,
+        "price_cents": 150,
+        "image_url": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=500&q=80"
+      }
+    ],
+    "totals": {
+      "subtotal_cents": 1000,
+      "delivery_fee_cents": 650,
+      "total_cents": 1650,
+      "currency": "EUR"
+    },
+    "buyer": {
+      "name": "Alex Rossi",
+      "email": "alex.traveler@example.com"
+    },
+    "ap2_verification": {
+      "verified": true,
+      "mandate_type": "ap2_cart_mandate",
+      "credential_manager": "LocalCredentialManager",
+      "token_id": "tok_lcm_passkey_9540"
+    },
+    "placed_at_display": "12/10/2026 09:00:00",
+    "requested_delivery_display": "12/10/2026 13:14 - 13:15",
+    "lead_time_minutes": 35
+  },
+  {
+    "order_id": "ORD-MI-LOCK1",
+    "created_at": "2026-10-12T09:15:00.000000+02:00",
+    "updated_at": "2026-10-12T09:20:00.000000+02:00",
+    "channel_source": "web_mcp",
+    "channel_label": "Demo 2: Web MCP",
+    "status": "ready_for_pickup",
+    "fulfillment_type": "pickup_locker",
+    "fulfillment_details": {
+      "location": "Smart Locker Piano Interrato",
+      "box_number": "Box #14",
+      "pin_code": "8492",
+      "slot_start": "13:06",
+      "slot_end": "13:16",
+      "delivery_fee_cents": 0,
+      "target_minutes_left": 10
+    },
+    "items": [
+      {
+        "id": "PANIN-001",
+        "title": "Focaccia Ligure Tradizionale all'Olio EVO",
+        "quantity": 2,
+        "price_cents": 650,
+        "image_url": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500&q=80"
+      },
+      {
+        "id": "BEV-003",
+        "title": "Succo d'Arancia Rossa di Sicilia Bio 250ml",
+        "quantity": 1,
+        "price_cents": 350,
+        "image_url": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&q=80"
+      }
+    ],
+    "totals": {
+      "subtotal_cents": 1650,
+      "delivery_fee_cents": 0,
+      "total_cents": 1650,
+      "currency": "EUR"
+    },
+    "buyer": {
+      "name": "Giulia Bianchi",
+      "email": "giulia.bianchi@example.it"
+    },
+    "ap2_verification": {
+      "verified": true,
+      "mandate_type": "ap2_cart_mandate",
+      "credential_manager": "LocalCredentialManager",
+      "token_id": "tok_lcm_passkey_lock1"
+    },
+    "placed_at_display": "12/10/2026 09:15:00",
+    "requested_delivery_display": "12/10/2026 13:06",
+    "lead_time_minutes": 30
+  },
+  {
+    "order_id": "ORD-MI-TAB05",
+    "created_at": "2026-10-12T09:30:00.000000+02:00",
+    "updated_at": "2026-10-12T09:35:00.000000+02:00",
+    "channel_source": "two_agent_a2a",
+    "channel_label": "Demo 3: Two-Agent A2A M2M",
+    "status": "preparing",
+    "fulfillment_type": "dine_in_table",
+    "fulfillment_details": {
+      "location": "Bistrot Binario 12",
+      "table_number": "Tavolo 5",
+      "service_time": "13:01",
+      "window": "13:01",
+      "delivery_fee_cents": 0,
+      "target_minutes_left": 5
+    },
+    "items": [
+      {
+        "id": "DOLCE-001",
+        "title": "Brioche Artigianale al Pistacchio di Bronte",
+        "quantity": 1,
+        "price_cents": 280,
+        "image_url": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80"
+      },
+      {
+        "id": "BEV-002",
+        "title": "Cappuccino Italiano con Latte Fresco Intero",
+        "quantity": 1,
+        "price_cents": 200,
+        "image_url": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&q=80"
+      }
+    ],
+    "totals": {
+      "subtotal_cents": 480,
+      "delivery_fee_cents": 0,
+      "total_cents": 480,
+      "currency": "EUR"
+    },
+    "buyer": {
+      "name": "Alessandro Verdi",
+      "email": "alessandro.verdi@example.it"
+    },
+    "ap2_verification": {
+      "verified": true,
+      "mandate_type": "ap2_cart_mandate",
+      "credential_manager": "LocalCredentialManager",
+      "token_id": "tok_lcm_passkey_tab05"
+    },
+    "placed_at_display": "12/10/2026 09:30:00",
+    "requested_delivery_display": "12/10/2026 13:01",
+    "lead_time_minutes": 5
+  },
+  {
+    "order_id": "ORD-MI-REST1",
+    "created_at": "2026-10-12T09:40:00.000000+02:00",
+    "updated_at": "2026-10-12T09:42:00.000000+02:00",
+    "channel_source": "ucp_rest",
+    "channel_label": "Demo 4: UCP Standard REST",
+    "status": "completed",
+    "fulfillment_type": "pickup_express",
+    "fulfillment_details": {
+      "location": "Bistrot Binario 12",
+      "table_number": "Al Banco",
+      "service_time": "13:00",
+      "window": "13:00 - 13:05",
+      "delivery_fee_cents": 0,
+      "target_minutes_left": 0
+    },
+    "items": [
+      {
+        "id": "BEV-004",
+        "title": "Specialty Cold Brew 16h Single Origin",
+        "quantity": 1,
+        "price_cents": 450,
+        "image_url": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500&q=80"
+      }
+    ],
+    "totals": {
+      "subtotal_cents": 450,
+      "delivery_fee_cents": 0,
+      "total_cents": 450,
+      "currency": "EUR"
+    },
+    "buyer": {
+      "name": "Alex Rossi",
+      "email": "alex.traveler@example.com"
+    },
+    "ap2_verification": {
+      "verified": true,
+      "mandate_type": "rfc9421_signed_request",
+      "credential_manager": "ECDSA-P256-HTTP-Signature",
+      "token_id": "sig_rfc9421_p256_rest1"
+    },
+    "placed_at_display": "12/10/2026 09:40:00",
+    "requested_delivery_display": "12/10/2026 13:00",
+    "lead_time_minutes": 5
+  }
+]
