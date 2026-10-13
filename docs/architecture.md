@@ -69,7 +69,7 @@ flowchart TD
 
     %% REAL-TIME DISPATCHING
     FirestoreDB ==>|Real-time onSnapshot Push| BopisDashboard
-    BackendMerchant -.->|Fallback REST Sync (/bopis/orders)| BopisDashboard
+    BackendMerchant -.->|Fallback REST Sync: /bopis/orders| BopisDashboard
 
     %% AUTHENTICATION
     ChatClient -.->|Google Identity Guard| FirebaseAuth
@@ -238,7 +238,7 @@ Ensures transactional HTTP exchanges between agents and UCP servers cannot be mo
   - `Content-Digest`: `sha-256=:<digest-base64>:` (guarantees JSON body integrity per RFC 9530).
   - `Signature-Input`: Declares signed components: `sig1=("@method" "@path" "@authority" "content-digest");created=...;keyid="shopper-key-2026";alg="ecdsa-p256"`.
   - `Signature`: `sig1=:<der-signature-base64>:` (digital signature of normalized metadata).
-- **Verification**: Implemented in [`backend/src/shared/rfc9421.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/rfc9421.py) and verified automatically on each UCP REST checkout completion.
+- **Verification**: Implemented in [`backend/src/shared/rfc9421.py`](../backend/src/shared/rfc9421.py) and verified automatically on each UCP REST checkout completion.
 
 ### 5.3 Firebase Authentication (Google Identity)
 - Web applications (`chat-client`, `bopis-dashboard`, `storefront-webmcp`, `shopper-client`) use **Firebase Authentication** with Google Sign-In.

@@ -124,9 +124,10 @@ npx nx run chat-client:serve          # Port 4200 (Demo 1 Baseline)
 
 Comprehensive architectural and protocol documentation is available in the `docs/` folder:
 
-- [**`docs/README.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/README.md): **Technical Documentation Hub**: complete documentation map, demo comparison matrix, and runtime guide.
-- [**`docs/architecture.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/architecture.md): Full system specification, sequence diagrams, cryptographic models, and anti-hijacking patterns.
-- [**`docs/gcp-ucp-architecture.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/gcp-ucp-architecture.md): Serverless cloud-native middleware architecture on Google Cloud Platform (Cloud Run, Firestore, Vertex AI).
-- [**`docs/ucp-requirements-and-capabilities-matrix.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/ucp-requirements-and-capabilities-matrix.md): Normative UCP requirement matrix (RFC 2119), relevance tiers (1–3), and implementation conformance.
-- [**`TODO.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/TODO.md): **Official Roadmap & Backlog**: 12 architectural enhancements (including standalone `ucp-web-client`, Chrome Extension, and Linate airport multi-store).
-- [**`backend/README.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/README.md): Technical deep-dive into Python microservices, Starlette routes, and Gemini 2.5 Flash agents.
+- [**`docs/README.md`**](docs/README.md): **Technical Documentation Hub**: complete documentation map, demo comparison matrix, and runtime guide.
+- [**`docs/architecture.md`**](docs/architecture.md): Full system specification, sequence diagrams, cryptographic models, and anti-hijacking patterns.
+- [**`docs/gcp-ucp-architecture.md`**](docs/gcp-ucp-architecture.md): Serverless cloud-native middleware architecture on Google Cloud Platform (Cloud Run, Firestore, Vertex AI).
+- [**`docs/ucp-requirements-and-capabilities-matrix.md`**](docs/ucp-requirements-and-capabilities-matrix.md): Normative UCP requirement matrix (RFC 2119), relevance tiers (1–3), and implementation conformance.
+- [**`TODO.md`**](TODO.md): **Official Roadmap & Backlog**: 12 architectural enhancements (including standalone `ucp-web-client`, Chrome Extension, and Linate airport multi-store).
+- [**`backend/README.md`**](backend/README.md): Technical deep-dive into Python microservices, Starlette routes, and Gemini 2.5 Flash agents.
+
