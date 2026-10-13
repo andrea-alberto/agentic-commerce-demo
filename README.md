@@ -1,44 +1,44 @@
 # Agentic Commerce Demo — UCP, Web MCP & Physical Retail
 
 > **Agentic Commerce: Redefining E-Commerce across UCP, Web MCP, and Physical Retail**  
-> *Monorepo Nx multi-progetto con 4 applicazioni Angular 22, 2 microservizi Python basati su Gemini 2.5 Flash, sicurezza Passkey AP2 e motore logistico di stazione (BOPIS Engine).*  
+> *Nx multi-project monorepo featuring 4 Angular 22 applications, 2 Python microservices powered by Gemini 2.5 Flash, AP2 Passkey security, and a physical station retail logistics engine (BOPIS Engine).*  
 >  
 > 💡 *Originally designed and showcased at GDG DevFest Milano 2026 as a reference architecture for open Agentic Commerce.*
 
 ---
 
-## 1. Visione del Progetto
+## 1. Project Vision
 
-Questa suite dimostrativa presenta l'evoluzione del commercio elettronico verso l'**Agentic Commerce**: un ecosistema aperto basato su standard in cui agenti intelligenti cooperano con merchant fisici ed e-commerce per acquistare autonomamente nel mondo reale per conto del viaggiatore.
+This reference demo suite demonstrates the transition of electronic commerce towards **Agentic Commerce**: an open, standards-based ecosystem where autonomous AI agents cooperate with physical merchants and web storefronts to execute real-world purchases on behalf of travelers.
 
-Lo scenario concreto è il **Travel Retail ad alta velocità a Milano Centrale**: un passeggero in arrivo o a bordo di un treno Frecciarossa che richiede pasti, caffè o accessori tech all'assistente personale con consegna espressa al posto sul treno, al bancone o tramite Smart Locker.
+The concrete demonstration scenario is **High-Speed Travel Retail at Milan Central Station**: a passenger arriving or traveling aboard a high-speed train (Frecciarossa / Italo) requesting meals, coffee, or tech essentials from their personal assistant, with time-critical delivery directly to their train seat, express station counter pickup, or automated Smart Locker retrieval.
 
-### I Tre Standard Aperti
-1. **Universal Commerce Protocol (UCP)**: Lo standard aperto (sviluppato da Google in collaborazione con Shopify, Walmart e partner retail) che unifica la discovery dei servizi (`/.well-known/ucp`), i carrelli, il checkout e i canali di ritiro/consegna (BOPIS).
-2. **Agent Payment Protocol (AP2)**: Il protocollo di pagamento crittografico con mandati delegati non ripudiabili (SD-JWT, firme hardware Passkey FIDO2 / TPM), che consente agli agenti di spendere entro limiti certi senza tocco manuale continuo.
-3. **Model Context Protocol (Web MCP)**: Lo standard per esporre tool e risorse di un'applicazione web nativa direttamente agli agenti AI.
+### The Three Open Standards
+1. **Universal Commerce Protocol (UCP)**: An open standard (co-developed by Google in collaboration with Shopify, Walmart, and retail partners) unifying service discovery (`/.well-known/ucp`), cart lifecycle, checkout sessions, and multi-channel fulfillment (BOPIS).
+2. **Agent Payment Protocol (AP2)**: A cryptographic payment protocol featuring non-repudiable delegated mandates (SD-JWT, FIDO2 / TPM Passkey hardware-backed signatures) allowing AI agents to transact autonomously within cryptographic spend and time limits.
+3. **Model Context Protocol (Web MCP)**: An open standard for exposing web application tools, state, and browser actions directly to AI models.
 
 ---
 
-## 2. Le 4 Demo a Confronto
+## 2. The 4 Demos Compared
 
-La suite offre una comparazione chiara, visiva e strutturata tra i 4 paradigmi di integrazione agentica:
+The suite offers a head-to-head, visual, and architectural comparison across the 4 primary agentic integration paradigms:
 
-| # | Demo | Canale Protocollo | Frontend | Backend Coinvolti | Focus Dimostrativo |
+| # | Demo Scenario | Protocol Channel | Frontend App | Backend Services | Architectural Focus |
 | :-: | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Direct A2A** *(Baseline)* | JSON-RPC 2.0 / A2A | `chat-client` (`:4200`) | `backend-merchant` (`:10999`) | Chatbot B2C diretto con l'agente del negozio, parsing intenti e autorizzazione AP2 con modale LCM. |
-| **2** | **Web MCP** *(E-Commerce)* | Model Context Protocol | `storefront-webmcp` (`:4202`) | `backend-merchant` (`:10999`) | L'agente naviga ed esegue tool esposti dal sito web (ricerca catalogo, carrello, calcolo consegna). |
-| **3** | **Two-Agent Federation** *(Full A2A)* | A2A Semantico M2M con **Gemini 2.5 Flash** | `shopper-client` (`:4203`) | `backend-shopper` (`:10998`) $\longleftrightarrow$ `backend-merchant` (`:10999`) | Cooperazione tra agenti: il Personal Shopper inietta il biglietto e negozia con il Merchant Agent della stazione; gestione combo multi-articolo. |
-| **4** | **UCP Standard REST** *(REST Binding)* | HTTP RESTful + **RFC 9421** | `shopper-client` (`:4203`) | `backend-shopper` (`:10998`) $\longrightarrow$ `backend-merchant` (`:10999`) | Il canale REST enterprise ufficiale di UCP con HTTP Message Signatures ECDSA-P256 e sessioni di checkout conformi. |
+| **1** | **Direct A2A** *(Baseline)* | JSON-RPC 2.0 / A2A | `chat-client` (`:4200`) | `backend-merchant` (`:10999`) | Direct B2C conversational chatbot with merchant agent, intent parsing, and AP2 Passkey payment modal. |
+| **2** | **Web MCP** *(E-Commerce)* | Model Context Protocol | `storefront-webmcp` (`:4202`) | `backend-merchant` (`:10999`) | Browser-native shopping agent navigating and executing web tools (`filterProducts`, `addToCart`, `configureFulfillment`). |
+| **3** | **Two-Agent Federation** *(Full A2A)* | Semantic M2M A2A with **Gemini 2.5 Flash** | `shopper-client` (`:4203`) | `backend-shopper` (`:10998`) $\longleftrightarrow$ `backend-merchant` (`:10999`) | Autonomous agent-to-agent federation: Personal Shopper injects travel ticket context and negotiates multi-item combos with Station Merchant. |
+| **4** | **UCP Standard REST** *(REST Binding)* | HTTP RESTful + **RFC 9421** | `shopper-client` (`:4203`) | `backend-shopper` (`:10998`) $\longrightarrow$ `backend-merchant` (`:10999`) | Official enterprise UCP REST binding with ECDSA-P256 HTTP Message Signatures and compliant checkout sessions. |
 
 ---
 
-## 3. Mappa delle Porte e dei Microservizi
+## 3. Port Allocation & Microservice Map
 
-Tutti i servizi possono girare contemporaneamente senza conflitti di porta:
+All services run concurrently without port conflicts:
 
 ```
-                                  [ INTERFACCIA UTENTE (Angular 22) ]
+                                  [ USER INTERFACE TIER (Angular 22) ]
                                                    │
          ┌─────────────────────────┬───────────────┴───────────────┬─────────────────────────┐
          ▼                         ▼                               ▼                         ▼
@@ -49,85 +49,84 @@ Tutti i servizi possono girare contemporaneamente senza conflitti di porta:
          ▼                         ▼                               ▼                         │
    ┌────────────────────────────────────────────────────────┐ ┌───────────────────────────┐  │
    │  :10999 backend-merchant                               │ │  :10998 backend-shopper   │  │
-   │  • Milano Centrale Travel Retail Hub                   │ │  • Personal Shopper Agent │  │
+   │  • Milan Central Travel Retail Hub                     │ │  • Personal Shopper Agent │  │
    │  • Merchant Agent (Gemini 2.5 Flash)                   │ │  • Intent (Gemini 2.5 Fl.)│──┘
-   │  • UCP REST Server (RFC 9421 ECDSA-P256)               │ │  • Biglietto & Contesto   │
-   │  • Web MCP Server & BOPIS Engine (store.py)            │ │  • Validatore Passkey AP2 │
+   │  • UCP REST Server (RFC 9421 ECDSA-P256)               │ │  • Ticket & Context Engine│
+   │  • Web MCP Server & BOPIS Engine (store.py)            │ │  • AP2 Passkey Validator  │
    └────────────────────────────────────────────────────────┘ └───────────────────────────┘
 ```
 
-| Porta | Servizio | Stack Tecnologico | Ruolo Architetturale |
+| Port | Service Name | Tech Stack | Architectural Role |
 | :---: | :--- | :--- | :--- |
-| **`4200`** | `chat-client` | Angular 22 | Client per la Demo 1 (Baseline Chat A2A diretta) |
-| **`4201`** | `bopis-dashboard` | Angular 22 | Hub centrale per gli operatori di stazione (Cucina, Barista, Corriere al Binario) |
-| **`4202`** | `storefront-webmcp` | Angular 22 | Storefront per la Demo 2 (Web MCP Registry) |
-| **`4203`** | `shopper-client` | Angular 22 | Client split-view per la Demo 3 (A2A) e Demo 4 (REST) con Live Protocol Inspector |
-| **`10998`** | `backend-shopper` | Python / Starlette | Personal Shopper Agent del viaggiatore (Contesto, Gemini 2.5 Flash e SSE stream) |
-| **`10999`** | `backend-merchant` | Python / Starlette | Merchant Agent di stazione (Gemini 2.5 Flash, BOPIS Engine, A2A, UCP REST) |
+| **`4200`** | `chat-client` | Angular 22 | Demo 1 Client (Baseline Direct A2A Chat Interface) |
+| **`4201`** | `bopis-dashboard` | Angular 22 | Central Dispatcher Hub for station staff (Kitchen, Barista, Platform Couriers) |
+| **`4202`** | `storefront-webmcp` | Angular 22 | Demo 2 Storefront (Web MCP Tool Registry) |
+| **`4203`** | `shopper-client` | Angular 22 | Demo 3 & 4 Split-View Client with Real-Time Protocol Inspector |
+| **`10998`** | `backend-shopper` | Python / Starlette | Traveler's Personal Shopper Agent (Context Engine, Gemini 2.5 Flash, SSE Stream) |
+| **`10999`** | `backend-merchant` | Python / Starlette | Station Merchant Agent (Gemini 2.5 Flash, BOPIS Engine, A2A, UCP REST Server) |
 
 ---
 
-## 4. Intelligenza Artificiale Duale: Gemini 2.5 Flash
+## 4. Dual AI Agent Engine: Gemini 2.5 Flash
 
-Negli scenari a due agenti (Demo 3 & 4), l'intelligenza semantica è affidata a **`gemini-2.5-flash`** con **Structured Outputs (Pydantic)**:
+In multi-agent scenarios (Demo 3 & 4), semantic reasoning is powered by **`gemini-2.5-flash`** with **Structured Outputs (Pydantic)**:
 
 1. **Personal Shopper Agent (`shopper_service.py`)**:
-   - Analizza il messaggio dell'utente (es. *"Prendimi un caffè doppio e una focaccia ligure per la carrozza 4"*).
-   - Riconosce la modalità di consegna desiderata (`in_seat_train`).
-   - Inietta il contesto del biglietto (treno *Frecciarossa 9540*, partenza *13:10*, binario *14*, carrozza *4*, posto *12D*).
-   - Formula la query semantica A2A machine-to-machine per l'agente della stazione.
+   - Parses user intent from conversational input (e.g. *"Get me a double espresso and warm focaccia for Coach 4"*).
+   - Resolves target fulfillment method (`in_seat_train`).
+   - Injects wallet context from the traveler's ticket (*Frecciarossa 9540*, departure *13:10*, platform *14*, coach *4*, seat *12D*).
+   - Formulates machine-to-machine semantic A2A inquiries for the merchant station agent.
 
 2. **Station Merchant Agent (`main.py`)**:
-   - Esamina il catalogo reale `products.json`.
-   - Riconosce ordini singoli o combinazioni multi-articolo:
-     - `CAFFE-001`: *Espresso Doppio Illy Caldo* (€2.50)
-     - `TOAST-003`: *Focaccia Toast Calda con Prosciutto Cotto e Fontina* (€6.50)
-     - Totale prodotti negoziato: **€9.00**.
-   - Delega al **BOPIS Engine** la verifica termica (`is_hot: True` ➔ **esclude automaticamente lo Smart Locker**) e la fattibilità logistica (consegna al posto consigliata a €15.50 tot, oppure ritiro al banco a €9.00 tot).
+   - Evaluates the real product inventory (`products.json`).
+   - Identifies single items or multi-item combo deals:
+     - `CAFFE-001`: *Double Espresso Illy Hot* (€2.50)
+     - `TOAST-003`: *Warm Focaccia Toast with Ham and Fontina Cheese* (€6.50)
+     - Negotiated subtotal: **€9.00**.
+   - Delegates physical verification to the **BOPIS Engine**: thermal validation (`is_hot: True` $\to$ **automatically bars Smart Lockers**) and logistics feasibility (recommends in-seat delivery for €15.50 total, or express counter pickup for €9.00 total).
 
 ---
 
-## 5. Guida Rapida di Avvio
+## 5. Quick Start Guide
 
-### Prerequisiti
-- **Node.js**: v20+ con `npm`
-- **Python**: v3.11+ con virtualenv in `backend/.venv`
-- File `.env` configurato nella root (vedi `.env.example`):
+### Prerequisites
+- **Node.js**: v20+ with `npm`
+- **Python**: v3.11+ with virtualenv in `backend/.venv`
+- Configured `.env` file in the root directory (see `.env.example`):
   ```env
-  GOOGLE_API_KEY=la_tua_chiave_google_ai_studio
-  # DEFAULT_BUYER_EMAIL=alex.traveler@example.com (opzionale)
-  # OPERATOR_EMAILS=merchant@agentic-commerce.demo (opzionale)
+  GOOGLE_API_KEY=your_google_ai_studio_api_key
+  # DEFAULT_BUYER_EMAIL=alex.traveler@example.com (optional)
+  # OPERATOR_EMAILS=merchant@agentic-commerce.demo (optional)
   ```
 
-### Avvio Simultaneo
-Per avviare tutti i 6 servizi con un solo comando:
+### Simultaneous Launch (All 6 Services)
+To launch all 6 services with a single command:
 ```powershell
 npm run serve:all
 ```
 
-### Avvio Singolo tramite Nx
+### Individual Execution via Nx
 ```powershell
-# Backend
-npx nx run backend-merchant:serve     # Porta 10999
-npx nx run backend-shopper:serve      # Porta 10998
+# Backend Services
+npx nx run backend-merchant:serve     # Port 10999
+npx nx run backend-shopper:serve      # Port 10998
 
-# Frontend
-npx nx run shopper-client:serve       # Porta 4203 (Demo 3 & 4)
-npx nx run bopis-dashboard:serve      # Porta 4201 (Schermo Stazione)
-npx nx run storefront-webmcp:serve    # Porta 4202 (Demo 2)
-npx nx run chat-client:serve          # Porta 4200 (Demo 1)
+# Frontend Applications
+npx nx run shopper-client:serve       # Port 4203 (Demo 3 & 4)
+npx nx run bopis-dashboard:serve      # Port 4201 (Station Logistics Screen)
+npx nx run storefront-webmcp:serve    # Port 4202 (Demo 2 Storefront)
+npx nx run chat-client:serve          # Port 4200 (Demo 1 Baseline)
 ```
 
 ---
 
-## 6. Documentazione Dettagliata
+## 6. Technical Documentation
 
-La documentazione architetturale e tecnica è disponibile nella cartella `docs/`:
+Comprehensive architectural and protocol documentation is available in the `docs/` folder:
 
-- [**`docs/architecture.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/architecture.md): Specifica architetturale completa, diagrammi di sequenza e modelli crittografici.
-- [**`docs/gcp-ucp-architecture.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/gcp-ucp-architecture.md): Pattern di middleware cloud serverless su Google Cloud (Cloud Run, Firestore, Vertex AI).
-- [**`docs/ucp-requirements-and-capabilities-matrix.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/ucp-requirements-and-capabilities-matrix.md): Matrice completa dei requisiti UCP (RFC 2119), livelli di rilevanza (1-3) e conformità della demo.
-- [**`docs/demo-plan.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/demo-plan.md): Panoramica dei 4 scenari dimostrativi e flussi inter-agente.
-- [**`backend/README.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/README.md): Dettaglio tecnico dei microservizi Python, delle API e di Gemini 2.5 Flash.
-
-
+- [**`docs/README.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/README.md): **Technical Documentation Hub**: complete documentation map, demo comparison matrix, and runtime guide.
+- [**`docs/architecture.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/architecture.md): Full system specification, sequence diagrams, cryptographic models, and anti-hijacking patterns.
+- [**`docs/gcp-ucp-architecture.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/gcp-ucp-architecture.md): Serverless cloud-native middleware architecture on Google Cloud Platform (Cloud Run, Firestore, Vertex AI).
+- [**`docs/ucp-requirements-and-capabilities-matrix.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/ucp-requirements-and-capabilities-matrix.md): Normative UCP requirement matrix (RFC 2119), relevance tiers (1–3), and implementation conformance.
+- [**`TODO.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/TODO.md): **Official Roadmap & Backlog**: 12 architectural enhancements (including standalone `ucp-web-client`, Chrome Extension, and Linate airport multi-store).
+- [**`backend/README.md`**](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/README.md): Technical deep-dive into Python microservices, Starlette routes, and Gemini 2.5 Flash agents.

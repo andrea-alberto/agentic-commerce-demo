@@ -1,136 +1,136 @@
-# Matrice dei Requisiti, Capability e Conformità UCP (Universal Commerce Protocol)
+# UCP Requirements, Capabilities & Conformance Matrix
 
-> **Analisi comparativa dei requisiti normativi UCP, livelli di rilevanza e mappatura dell'implementazione**  
-> *Progetto di riferimento:* [`ucp-demo-mi-devfest2026`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026) — *GDG DevFest Milano 2026*  
-> *Specifiche UCP analizzate:* Protocol Specification v2026-01-23 / Draft, SDK Python (`ucp-sdk` 0.5.0), SDK TypeScript (`@ucp-js/sdk` 0.5.1), AP2 Protocol Specification.
+> **Comparative analysis of normative UCP requirements, relevance tiers, and implementation mapping**  
+> *Reference project:* [`ucp-demo-mi-devfest2026`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026) — *GDG DevFest Milano 2026*  
+> *Analyzed UCP Specifications:* Protocol Specification v2026-01-23 / Draft, Python SDK (`ucp-sdk` 0.5.0), TypeScript SDK (`@ucp-js/sdk` 0.5.1), AP2 Protocol Specification.
 
 ---
 
-## 1. Metodologia di Classificazione
+## 1. Classification Methodology
 
-### 1.1 Livelli Normativi di Specifica (RFC 2119 / RFC 8174)
-La specifica formale UCP adotta le parole chiave convenzionali IETF:
-* **MUST / REQUIRED**: Requisito vincolante e obbligatorio. L'omissione rende l'implementazione non conforme al protocollo.
-* **SHOULD / RECOMMENDED**: Forte raccomandazione architetturale. Può essere derogato solo per motivate ragioni implementative.
-* **MAY / OPTIONAL**: Funzionalità opzionale o estensione modulare negoziabile tra le parti.
+### 1.1 Normative Specification Levels (RFC 2119 / RFC 8174)
+The formal UCP specification adopts standard IETF keywords:
+* **MUST / REQUIRED**: An absolute requirement of the specification. Non-conformance breaks interoperability.
+* **SHOULD / RECOMMENDED**: A strong architectural recommendation. May be overridden only with valid engineering justification.
+* **MAY / OPTIONAL**: An optional capability or modular extension negotiable between parties.
 
-### 1.2 Indice di Rilevanza Architetturale (Scala 1 – 3)
-* **Livello 3 (Critico / Fondamentale)**: Pilastro irrinunciabile del protocollo. Requisito baseline per l'interoperabilità di rete, la discovery dei servizi, la conformità dei tipi e la sicurezza primaria delle transazioni tra agenti.
-* **Livello 2 (Alto / Operativo Enterprise)**: Standard di produzione per scenari reali e commercio su scala (gestione logistica/ritiro, idempotenza, concorrenza, prevenzione hijacking del carrello e ciclo di vita ordini).
-* **Livello 1 (Avanzato / Estensione Verticale)**: Funzionalità verticali opzionali o di nicchia (prenotazioni alberghiere, loyalty avanzata multiparent, split payment tra più pagatori).
+### 1.2 Architectural Relevance Index (Scale 1 – 3)
+* **Tier 3 (Critical / Core Foundation)**: Indispensable protocol pillar. Baseline requirement for network interoperability, service discovery, type safety, and core inter-agent transaction security.
+* **Tier 2 (High / Production Operational)**: Production standards for real-world enterprise retail (fulfillment & pickup logistics, idempotency, concurrency, anti-hijacking, and order lifecycle).
+* **Tier 1 (Advanced / Vertical Extension)**: Specialized or vertical industry features (hotel/lodging bookings, multi-parent loyalty programs, split multi-party payments).
 
 ---
 
 ## 2. Core Protocol, Governance & Discovery
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **Discovery Endpoint `/.well-known/ucp`** | **MUST** | **3** | Il merchant deve pubblicare un manifest JSON pubblico al path standard per consentire all'agente di rilevare servizi, trasporti e capability. | ✅ **Implementato** | [`get_ucp_manifest` in `ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L33) |
-| **Namespace Reverse-Domain** | **MUST** | **3** | Naming convenzionale `{reverse-domain}.{service}.{capability}` (es. `dev.ucp.shopping.checkout`). Riserva del prefisso `dev.ucp.*`. | ✅ **Implementato** | Rispettato in tutti i manifest, header ed eventi ([`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L40)) |
-| **Authority Binding** | **MUST** | **3** | L'origine dell'URL `schema` deve corrispondere all'autorità reverse-domain per garantire la provenienza del contratto. | 🟡 **Adattato** | Riferimenti puntano a `https://ucp.dev/...`; in locale non eseguiamo fetch HTTPS remota per indipendenza offline. |
-| **Capability Intersection Algorithm** | **MUST** | **3** | Calcolo dell'intersezione tra le capability del merchant e quelle dell'agente (dichiarate nell'header `UCP-Agent`). | 🟡 **Parziale** | Negoziata nel manifest e nelle risposte; non effettuiamo fetch dinamica del profilo remoto via URL durante la demo. |
-| **Enveloping & Namespace `ucp` riservato** | **MUST** | **3** | Gli oggetti UCP contengono l'oggetto `ucp` con metadati (`version`, `capabilities`, `status`). Divieto di ridefinire il campo a livello di dominio. | ✅ **Implementato** | Tutte le risposte REST contengono l'involucro standard `ucp: { version, capabilities, ... }`. |
-| **Formato Valute & Importi (Minor Units)** | **MUST** | **3** | Tutti gli importi monetari devono essere espressi in centesimi interi (minor units) con codice valuta ISO 4217 (es. `EUR`). | ✅ **Implementato** | Rispettato ovunque: `price_cents`, `subtotal_cents`, `delivery_fee_cents`, `currency: "EUR"` ([`models.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/models.py)). |
-| **Formato Date RFC 3339 / ISO 8601** | **MUST** | **3** | Tutte le date devono essere serializzate nel formato standard ISO 8601 / RFC 3339 UTC. | ✅ **Implementato** | Usato su `created_at`, `updated_at`, `placed_at_display` ([`bopis_store.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/bopis_store.py)). |
-| **Tolerant Reader (Open Schema)** | **MUST** | **2** | I client e server devono ignorare campi sconosciuti nell'involucro UCP per garantire retrocompatibilità e forward-compatibility. | ✅ **Implementato** | I modelli Pydantic usano `model_config = ConfigDict(extra="ignore")`. |
-| **`map_order` Annotation** | **SHOULD** | **1** | Ordinamento deterministico delle chiavi nei dizionari preservato attraverso la canonicalizzazione RFC 8785 (es. ordine payment handlers). | ⚪ **Non Implementato** | Usiamo ordinamento nativo Python `dict` (inserimento); non formalizzato nell'attributo `map_order`. |
+| **Discovery Endpoint `/.well-known/ucp`** | **MUST** | **3** | Merchant must expose a public JSON manifest at the standard well-known path for agents to discover services, transports, and capabilities. | ✅ **Implemented** | [`get_ucp_manifest` in `ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L33) |
+| **Reverse-Domain Namespace** | **MUST** | **3** | Conventional naming `{reverse-domain}.{service}.{capability}` (e.g. `dev.ucp.shopping.checkout`). Prefix `dev.ucp.*` reserved. | ✅ **Implemented** | Followed across all manifests, headers, and events ([`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L40)) |
+| **Authority Binding** | **MUST** | **3** | The schema URL origin must match the reverse-domain authority to guarantee contract authenticity. | 🟡 **Adapted** | References point to `https://ucp.dev/...`; offline local mode does not fetch live remote HTTPS schemas. |
+| **Capability Intersection Algorithm** | **MUST** | **3** | Calculate the mathematical intersection between merchant and buyer agent capabilities (advertised via the `UCP-Agent` header). | 🟡 **Partial** | Advertised in manifests and responses; dynamic remote URL profile fetching bypassed during offline demo. |
+| **Enveloping & Reserved `ucp` Namespace** | **MUST** | **3** | UCP protocol objects encapsulate a top-level `ucp` metadata envelope (`version`, `capabilities`, `status`). Domain payload cannot redefine `ucp`. | ✅ **Implemented** | All REST responses include standard envelope `ucp: { version, capabilities, ... }`. |
+| **Monetary Minor Units & Currency** | **MUST** | **3** | All prices and amounts must be expressed as integer minor units (cents) with an ISO 4217 currency code (e.g. `EUR`). | ✅ **Implemented** | Consistently enforced: `price_cents`, `subtotal_cents`, `delivery_fee_cents`, `currency: "EUR"` ([`models.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/models.py)). |
+| **Date Format RFC 3339 / ISO 8601** | **MUST** | **3** | All timestamps must be serialized in standard ISO 8601 / RFC 3339 UTC format. | ✅ **Implemented** | Used on `created_at`, `updated_at`, `placed_at_display` ([`bopis_store.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/bopis_store.py)). |
+| **Tolerant Reader (Open Schema)** | **MUST** | **2** | Clients and servers must silently ignore unknown fields in the UCP envelope for backwards/forwards compatibility. | ✅ **Implemented** | Pydantic models configured with `model_config = ConfigDict(extra="ignore")`. |
+| **`map_order` Annotation** | **SHOULD** | **1** | Deterministic key sorting across dictionaries preserved via RFC 8785 canonicalization (e.g. payment handler order). | ⚪ **Not Implemented** | Uses native Python dict insertion order; not formalized in `map_order` attribute. |
 
 ---
 
-## 3. Trasporti e Canali di Rete (Transports)
+## 3. Transports & Network Bindings
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **REST Transport Binding** | **MUST** *(se supportato)* | **3** | Esposizione API standard HTTP/1.1 o HTTP/2 documentate tramite schema OpenAPI 3.x. | ✅ **Implementato** | Endpoints `/ucp/checkouts`, `/ucp/catalog/products` in [`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py). |
-| **Transport Security (TLS 1.3 min)** | **MUST** | **3** | Tutte le comunicazioni REST ed MCP di produzione devono viaggiare su HTTPS con TLS versione 1.3 minimo. | 🟡 **Parziale** | In locale usiamo HTTP chiaro (`http://localhost:...`) per facilitare la demo offline; TLS è delegabile al reverse-proxy. |
-| **MCP (Model Context Protocol) Transport** | **MAY** | **3** | Esposizione dei servizi commerciali tramite protocollo MCP (JSON-RPC over Streamable HTTP). | ✅ **Implementato** | Server Web MCP su `/mcp/tools` con 7 tool commerciali conformi ([`mcp_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/mcp_server.py)). |
-| **A2A (Agent-to-Agent) Transport** | **MAY** | **3** | Canale di cooperazione M2M semantica con Agent Card (`/.well-known/agent-card.json`). | ✅ **Implementato** | Agent Card e negoziatore semantico federato con Gemini 2.5 Flash ([`agent.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/agent.py), [`shopper_service.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend-shopper/shopper_service.py)). |
-| **Embedded Protocol Transport** | **MAY** | **1** | Comunicazione JSON-RPC postMessage tra parent frame e iframe per checkout embedded. | ⚪ **Non Necessario** | Nella nostra architettura l'integrazione è full-agentic/headless, non embedded web iframe. |
+| **REST Transport Binding** | **MUST** *(if supported)* | **3** | Standard HTTP/1.1 or HTTP/2 API documented via OpenAPI 3.x schema. | ✅ **Implemented** | `/ucp/checkouts`, `/ucp/catalog/products` endpoints in [`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py). |
+| **Transport Security (TLS 1.3 min)** | **MUST** | **3** | All production REST and MCP communications must use HTTPS with TLS 1.3 minimum. | 🟡 **Adapted** | Local development uses HTTP (`http://localhost:...`) for offline autonomy; TLS termination handled by edge gateway. |
+| **MCP (Model Context Protocol) Transport** | **MAY** | **3** | Expose commerce capabilities over MCP protocol (JSON-RPC over Streamable HTTP). | ✅ **Implemented** | Web MCP server on `/mcp/tools` with 7 compliant commerce tools ([`mcp_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/mcp_server.py)). |
+| **A2A (Agent-to-Agent) Transport** | **MAY** | **3** | Semantic M2M cooperation channel utilizing Agent Cards (`/.well-known/agent-card.json`). | ✅ **Implemented** | Agent Card and federated semantic negotiation with Gemini 2.5 Flash ([`agent.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/agent.py), [`shopper_service.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend-shopper/shopper_service.py)). |
+| **Embedded Protocol Transport** | **MAY** | **1** | JSON-RPC postMessage communication between parent frame and checkout iframe. | ⚪ **Not Needed** | Our architecture is full-agentic/headless rather than an embedded web iframe. |
 
 ---
 
-## 4. Shopping Capabilities Core
+## 4. Core Shopping Capabilities
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **Catalog Capability (`dev.ucp.shopping.catalog`)** | **RECOMMENDED** | **3** | Ricerca e lookup dei prodotti (`GET /catalog/products`, `products/{id}`). | ✅ **Implementato** | `GET /ucp/catalog/products` con catalogo unificato `products.json` ([`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L81)). |
-| **Checkout Capability (`dev.ucp.shopping.checkout`)** | **MUST** | **3** | Creazione, aggiornamento e finalizzazione della transazione (`POST /checkouts`, `PATCH`, `POST /complete`). | ✅ **Implementato** | Ciclo completo attivo su [`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L87-L230). |
-| **Checkout Status Lifecycle** | **MUST** | **3** | Macchina a stati deterministica del checkout: `incomplete` $\to$ `ready_for_complete` $\to$ `completed` / `canceled`. | ✅ **Implementato** | Transizioni `in_progress` $\to$ `ready_for_complete` $\to$ `completed` gestite in memoria e riflesse sul client. |
-| **Cart Capability (`dev.ucp.shopping.cart`)** | **OPTIONAL** | **2** | Sessione carrello leggera e pre-acquisto senza configurazione di pagamento (`/carts`). | 🟡 **Parziale** | Gestito nel Web MCP e in memoria; il canale REST converte direttamente la selezione in checkout session. |
-| **Cart-to-Checkout Conversion** | **RECOMMENDED** | **2** | Conversione idempotente di un `cart_id` in un `checkout_id` mantenendo gli articoli e il contesto. | ⚪ **A Roadmap** | Documentato nei TODO; nella demo il Personal Shopper genera direttamente la sessione di checkout UCP. |
-| **Order Capability (`dev.ucp.shopping.order`)** | **RECOMMENDED** | **2** | Consultazione stato e ciclo di vita post-acquisto (`GET /orders/{id}`, tracking webhook). | ✅ **Implementato** | Motore centrale BOPIS Engine con consultazione `/bopis/orders`, `/bopis/orders/{id}/status` e push real-time Firestore. |
-| **Permalink Capability (`dev.ucp.shopping.permalink`)** | **OPTIONAL** | **1** | URL persistente per riprendere il carrello o visualizzare l'ordine via web tradizionale (`continue_url`). | 🟡 **Parziale** | Usiamo fallback `continue_url`, ma non il servizio formale permalink UCP. |
+| **Catalog Capability (`dev.ucp.shopping.catalog`)** | **RECOMMENDED** | **3** | Product lookup and search (`GET /catalog/products`, `products/{id}`). | ✅ **Implemented** | `GET /ucp/catalog/products` with unified `products.json` ([`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L81)). |
+| **Checkout Capability (`dev.ucp.shopping.checkout`)** | **MUST** | **3** | Create, update, and complete transaction sessions (`POST /checkouts`, `PATCH`, `POST /complete`). | ✅ **Implemented** | Full lifecycle active in [`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L87-L230). |
+| **Checkout Status Lifecycle** | **MUST** | **3** | Deterministic checkout state machine: `incomplete` $\to$ `ready_for_complete` $\to$ `completed` / `canceled`. | ✅ **Implemented** | Transitions `in_progress` $\to$ `ready_for_complete` $\to$ `completed` managed in-memory and reflected on client. |
+| **Cart Capability (`dev.ucp.shopping.cart`)** | **OPTIONAL** | **2** | Lightweight pre-checkout cart session without payment setup (`/carts`). | 🟡 **Partial** | Managed in Web MCP and in-memory; REST channel directly converts item selections into checkout sessions. |
+| **Cart-to-Checkout Conversion** | **RECOMMENDED** | **2** | Idempotent conversion of a `cart_id` into a `checkout_id` preserving line items and context. | ⚪ **Roadmap** | Tracked in `TODO.md`; currently Personal Shopper directly initiates the UCP checkout session. |
+| **Order Capability (`dev.ucp.shopping.order`)** | **RECOMMENDED** | **2** | Post-purchase state queries and order lifecycle (`GET /orders/{id}`, tracking webhooks). | ✅ **Implemented** | Central BOPIS Engine with `/bopis/orders`, `/bopis/orders/{id}/status`, and real-time Firestore push. |
+| **Permalink Capability (`dev.ucp.shopping.permalink`)** | **OPTIONAL** | **1** | Persistent URL to resume cart or view order via traditional browser (`continue_url`). | 🟡 **Partial** | Fallback `continue_url` provided; formal UCP permalink service not registered. |
 
 ---
 
-## 5. Estensioni Shopping & Retail Fisico
+## 5. Shopping Extensions & Physical Retail
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **Fulfillment Extension (`dev.ucp.shopping.fulfillment`)** | **RECOMMENDED** | **3** | Selezione e calcolo delle modalità di consegna e ritiro: `pickup`, `shipping`, `in_seat_train`, `pickup_locker`. | ✅ **Implementato** | Motore completo delle regole di stazione: `in_seat_train` (carrozza/posto), `pickup_locker` (box/PIN) e `pickup_express` ([`station_rules.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/station_rules.py)). |
-| **Fulfillment Lead Time & Physical Constraints** | **RECOMMENDED** | **3** | Validazione dei vincoli fisici e temporali (preavviso min 30 min per il treno, divieto cibi caldi nello Smart Locker). | ✅ **Implementato** | Logica termica e validazione orari treno implementata in [`validate_station_constraints`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/station_rules.py#L38). |
-| **Discount Extension (`dev.ucp.shopping.discount`)** | **OPTIONAL** | **2** | Applicazione di coupon, sconti promozionali e ricalcolo totali `allocations`. | 🟡 **Parziale** | Gestito a livello di bundle combo AI (es. Panino + Caffè negoziato a prezzo speciale da Gemini 2.5 Flash). |
-| **Buyer Consent Extension (`dev.ucp.shopping.buyer_consent`)** | **RECOMMENDED** | **2** | Raccolta e formalizzazione del consenso del compratore (termini di servizio, privacy, policy). | 🟡 **Simulato** | Incluso nel flusso di autorizzazione dell'agente prima della firma del mandato AP2. |
-| **Loyalty Extension (`dev.ucp.common.loyalty`)** | **OPTIONAL** | **1** | Programmi fedeltà, saldo punti e applicazione sconti livello (es. FrecciaClub Gold). | ✅ **Implementato** | Il Personal Shopper inietta il `loyalty_tier: "FrecciaClub Gold"` nel contesto del viaggiatore ([`shopper_service.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend-shopper/shopper_service.py#L101)). |
+| **Fulfillment Extension (`dev.ucp.shopping.fulfillment`)** | **RECOMMENDED** | **3** | Selection and calculation of fulfillment methods: `pickup`, `shipping`, `in_seat_train`, `pickup_locker`. | ✅ **Implemented** | Comprehensive station fulfillment engine: `in_seat_train` (car/seat), `pickup_locker` (box/PIN), `pickup_express` ([`station_rules.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/station_rules.py)). |
+| **Fulfillment Lead Time & Physical Constraints** | **RECOMMENDED** | **3** | Validation of physical and timing constraints (min 30 min advance notice for train, hot food barred from Smart Locker). | ✅ **Implemented** | Thermal checks and train timetable validation in [`validate_station_constraints`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/station_rules.py#L38). |
+| **Discount Extension (`dev.ucp.shopping.discount`)** | **OPTIONAL** | **2** | Coupon codes, promotional vouchers, and item-level price adjustments (`allocations`). | 🟡 **Partial** | Managed via AI combo bundles (e.g. Sandwich + Coffee negotiated at promotional price by Gemini 2.5 Flash). |
+| **Buyer Consent Extension (`dev.ucp.shopping.buyer_consent`)** | **RECOMMENDED** | **2** | Recording and verification of buyer consent (terms of service, privacy, store policies). | 🟡 **Simulated** | Included in buyer agent authorization dialog before signing AP2 mandate. |
+| **Loyalty Extension (`dev.ucp.common.loyalty`)** | **OPTIONAL** | **1** | Loyalty programs, points balance, and tier discount application (e.g. FrecciaClub Gold). | ✅ **Implemented** | Personal Shopper injects `loyalty_tier: "FrecciaClub Gold"` into traveler context ([`shopper_service.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend-shopper/shopper_service.py#L101)). |
 
 ---
 
-## 6. Sicurezza Transazionale, Anti-Hijacking & Crittografia
+## 6. Transaction Security, Anti-Hijacking & Cryptography
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **RFC 9421 HTTP Message Signatures** | **MUST** *(per auth)* | **3** | Firma crittografica asimmetrica (ES256) degli header HTTP (`Signature`, `Signature-Input`) e digest del corpo (RFC 9530). | ✅ **Implementato** | Modulo autonomo di firma e verifica crittografica ECDSA-P256 ([`rfc9421.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/rfc9421.py), verificato in [`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L220)). |
-| **AP2 Mandates Extension (`dev.ucp.payment.ap2`)** | **RECOMMENDED** | **3** | Mandati crittografici non ripudiabili (Intent, Cart e Payment Mandate) con autorizzazione Passkey FIDO2/TPM. | ✅ **Implementato** | Generazione, firma hardware LCM e verifica dei mandati SD-JWT ([`ap2_crypto.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/ap2_crypto.py)). |
-| **Dual-Token Architecture (Pattern A)** | **RECOMMENDED** | **2** | Separazione tra `checkout_id` pubblico ed effimero `cart_secret_token` per impedire l'enumerazione e il session hijacking. | ⚪ **Nei TODO** | Documentato nei TODO del server REST e nell'architettura ([`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L32)). Usiamo UUIDv4 casuali. |
-| **Optimistic Locking & ETag (Pattern B)** | **RECOMMENDED** | **2** | Uso di `ETag` e dell'header `If-Match` sulle mutazioni con emissione di `HTTP 412 Precondition Failed` contro lost updates. | ⚪ **Nei TODO** | Inserito nei TODO tecnici di `patch_ucp_checkout`; mutazione attuale atomica in memoria. |
-| **Mutual TLS (mTLS) & Client Pinning (Pattern C)** | **SHOULD** | **2** | Autenticazione mutua a livello di trasporto con certificati client X.509 legati alla chiave dell'agente. | ⚪ **Nei TODO** | Sostituito in locale dalla firma applicativa RFC 9421 per permettere il deployment offline senza PKI locale. |
-| **Short-Lived TTL & Quote Locking (Pattern D)** | **RECOMMENDED** | **2** | Timestamp `expires_at` nella sessione con congelamento di prezzi, inventario e slot logistici; scarto sessioni stantie. | ⚪ **Nei TODO** | Documentato nei TODO; validiamo i limiti fisici dell'orario treno ma senza sweeper automatico del TTL. |
-| **Idempotency Key (`idempotency-key`)** | **MUST** *(per POST)* | **2** | Header `Idempotency-Key` per prevenire duplicazione di addebiti e ordini in caso di retry di rete. | 🟡 **Parziale** | Implementato per dedup tramite `order_id` / `checkout_id`; non formalizzato come header HTTP generico con SHA-256 store. |
+| **RFC 9421 HTTP Message Signatures** | **MUST** *(for auth)* | **3** | Asymmetric cryptographic signing (ES256) of HTTP headers (`Signature`, `Signature-Input`) and body digest (RFC 9530). | ✅ **Implemented** | Standalone ECDSA-P256 signing and verification module ([`rfc9421.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/rfc9421.py), verified in [`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L220)). |
+| **AP2 Mandates Extension (`dev.ucp.payment.ap2`)** | **RECOMMENDED** | **3** | Non-repudiable cryptographic mandates (Intent, Cart, and Payment Mandate) with Passkey FIDO2/TPM hardware backing. | ✅ **Implemented** | Generation, LCM hardware signing, and SD-JWT mandate verification ([`ap2_crypto.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/shared/ap2_crypto.py)). |
+| **Dual-Token Architecture (Pattern A)** | **RECOMMENDED** | **2** | Decoupling public `checkout_id` from ephemeral `cart_secret_token` to prevent enumeration and cart hijacking. | ⚪ **Tracked in TODO** | Documented in `TODO.md` and server architecture ([`ucp_rest_server.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/ucp_rest_server.py#L32)). High-entropy UUIDv4 used. |
+| **Optimistic Locking & ETag (Pattern B)** | **RECOMMENDED** | **2** | Enforce `ETag` and `If-Match` headers on state mutations, rejecting conflicting updates with `HTTP 412 Precondition Failed`. | ⚪ **Tracked in TODO** | Documented in `patch_ucp_checkout` technical roadmap; current mutation is atomic in-memory. |
+| **Mutual TLS (mTLS) & Client Pinning (Pattern C)** | **SHOULD** | **2** | Transport-level mutual authentication with X.509 client certificates tied to agent credentials. | ⚪ **Tracked in TODO** | Replaced in local demo by application-layer RFC 9421 signing for offline flexibility without a local PKI. |
+| **Short-Lived TTL & Quote Locking (Pattern D)** | **RECOMMENDED** | **2** | `expires_at` timestamp in checkout session freezing pricing, stock, and logistics slots; automated stale session cleanup. | ⚪ **Tracked in TODO** | Documented in `TODO.md`; physical train departure limits are validated without automated TTL sweeping. |
+| **Idempotency Key (`idempotency-key`)** | **MUST** *(for POST)* | **2** | `Idempotency-Key` header to prevent duplicate charges and orders during network retries. | 🟡 **Partial** | Deduplication enforced via `order_id` / `checkout_id`; not yet formalized as an arbitrary header with a SHA-256 store. |
 
 ---
 
-## 7. Identità, Location & Capability Verticali
+## 7. Identity, Location & Vertical Capabilities
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **Identity Linking (`dev.ucp.common.identity_linking`)** | **OPTIONAL** | **2** | Federazione OAuth 2.0 PKCE e Token Exchange (RFC 8693) per collegare l'account dell'agente con il merchant. | 🟡 **Modalità 1** | Implementata **Modalità 1 (Matching Dichiarato per Email)** con filtri utente; Modalità 2 e 3 salvate come TODO architetturali ([`main.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/main.py#L61)). |
-| **Location Capability (`dev.ucp.common.location`)** | **OPTIONAL** | **2** | Discovery di negozi fisici, stazioni o lockers tramite geolocalizzazione (`search`, `lookup`). | ✅ **Adattato** | Contestualizzato direttamente sulla stazione di Milano Centrale e sui suoi punti di ritiro (Binario 12, Smart Locker Piano -1). |
-| **Lodging Booking (`dev.ucp.lodging.booking`)** | **OPTIONAL** | **1** | Prenotazione camere, check-in, cancellazioni alberghiere. | ⚪ **Fuori Scope** | Non applicabile: la nostra demo è focalizzata verticalmente sul Travel Retail ferroviario ad alta velocità. |
-| **Split Payments (`dev.ucp.payment.split`)** | **OPTIONAL** | **1** | Ripartizione della spesa su più strumenti di pagamento o tra più acquirenti. | ⚪ **Fuori Scope** | La transazione è autorizzata dal singolo viaggiatore tramite mandato AP2. |
+| **Identity Linking (`dev.ucp.common.identity_linking`)** | **OPTIONAL** | **2** | OAuth 2.0 PKCE and Token Exchange (RFC 8693) to federate buyer agent identity with merchant user accounts. | 🟡 **Mode 1** | Implemented **Mode 1 (Declared Email Matching)** with user filters; Modes 2 & 3 tracked in roadmap ([`main.py`](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/backend/src/travel_retail_agent/main.py#L61)). |
+| **Location Capability (`dev.ucp.common.location`)** | **OPTIONAL** | **2** | Discovery of physical stores, train stations, or pickup lockers via geolocation (`search`, `lookup`). | ✅ **Adapted** | Contextualized directly to Milan Central Station pickup points (Platform 12, Smart Locker Floor -1). |
+| **Lodging Booking (`dev.ucp.lodging.booking`)** | **OPTIONAL** | **1** | Hotel room reservation, guest check-in, and cancellation flows. | ⚪ **Out of Scope** | Not applicable: demo focuses exclusively on high-speed rail travel retail. |
+| **Split Payments (`dev.ucp.payment.split`)** | **OPTIONAL** | **1** | Splitting charges across multiple payment instruments or multiple buyers. | ⚪ **Out of Scope** | Single traveler authorization via cryptographic AP2 mandate. |
 
 ---
 
-## 8. Error Handling, Messaggi & Ripristino (Fault Tolerance)
+## 8. Error Handling, Messages & Fault Tolerance
 
-| Requisito / Caratteristica | Livello Specifica | Imp. (1-3) | Descrizione Tecnica UCP | Stato nella Demo | Riferimento nella Codebase |
+| Requirement / Feature | Spec Level | Tier (1-3) | Technical UCP Description | Demo Status | Codebase Reference |
 | :--- | :---: | :---: | :--- | :---: | :--- |
-| **UCP Error Envelope & Severity** | **MUST** | **3** | Messaggi di errore strutturati con `type: "error"`, `code`, `severity` (`recoverable` vs `unrecoverable`) e `path`. | ✅ **Implementato** | Struttura adottata nelle risposte di validazione vincoli di stazione (`422 Unprocessable Entity` con `validation_failed`). |
-| **Fallback Web (`continue_url`)** | **SHOULD** | **2** | URL di continuazione per consentire all'umano di completare l'acquisto sul browser in caso di errore dell'agente. | ✅ **Implementato** | La demo include la transizione dall'agente allo storefront web (`storefront-webmcp` su porta `4202`). |
-| **Codici HTTP Standard** | **MUST** | **3** | Rispetto dei codici `201 Created`, `400 Bad Request`, `401 Unauthorized`, `404 Not Found`, `422 Unprocessable`. | ✅ **Implementato** | Pienamente rispettati in tutti i controller Starlette/FastAPI della demo. |
+| **UCP Error Envelope & Severity** | **MUST** | **3** | Structured error responses with `type: "error"`, `code`, `severity` (`recoverable` vs `unrecoverable`), and `path`. | ✅ **Implemented** | Returned on station constraint violations (`422 Unprocessable Entity` with `validation_failed`). |
+| **Web Fallback (`continue_url`)** | **SHOULD** | **2** | Continuation URL allowing human shopper to complete checkout via browser if agent encounters an unrecoverable error. | ✅ **Implemented** | Demo supports direct transition from agent to web storefront (`storefront-webmcp` on port `4202`). |
+| **Standard HTTP Status Codes** | **MUST** | **3** | Strict adherence to HTTP semantics: `201 Created`, `400 Bad Request`, `401 Unauthorized`, `404 Not Found`, `422 Unprocessable`. | ✅ **Implemented** | Consistently enforced across Starlette/FastAPI route controllers. |
 
 ---
 
-## 9. Dashboard di Sintesi e Metriche di Conformità
+## 9. Conformance Summary & Architecture Trade-Offs
 
-### Copertura per Livello di Rilevanza
+### Coverage by Relevance Tier
 
 ```
-Livello 3 (Critico / Baseline):    [██████████████████░░] ~90% Copertura
-Livello 2 (Operativo Enterprise):  [███████████████░░░░░] ~75% Copertura
-Livello 1 (Verticale / Opzionale): [██████████░░░░░░░░░░] ~50% (Focus Travel Retail)
+Tier 3 (Critical / Core Foundation):   [██████████████████░░] ~90% Coverage
+Tier 2 (High / Production Operational): [███████████████░░░░░] ~75% Coverage
+Tier 1 (Advanced / Vertical Extension): [██████████░░░░░░░░░░] ~50% (Travel Retail Focus)
 ```
 
-### Trade-off Ingegneristici Adottati nella Demo
+### Engineering Trade-Offs in Reference Implementation
 
-1. **Trasporto Locale HTTP vs HTTPS TLS 1.3:**
-   - *Scelta:* Per consentire alla demo di girare in modo completamente autonomo, offline o durante una conferenza senza dipendenze da certificati X.509 locali o DNS esterni, i microservizi comunicano su `http://localhost:...`.
-   - *Compensazione Crittografica:* La sicurezza e l'integrità dei messaggi sono garantite a livello applicativo tramite **RFC 9421 HTTP Message Signatures (ECDSA-P256)** con hash del corpo RFC 9530.
-2. **Architettura Dual-Token vs UUIDv4:**
-   - *Scelta:* Nella demo gli identificatori di carrello e checkout utilizzano UUIDv4 crittograficamente casuali ad alta entropia.
-   - *Evoluzione:* Il pattern Dual-Token formale (con bearer token separato per la mutazione) è pianificato come estensione di produzione.
-3. **Locking Ottimistico in Memoria vs ETag/If-Match:**
-   - *Scelta:* I checkout attivi sono mantenuti nello store del server con mutazioni atomiche sincrone.
-   - *Evoluzione:* L'emissione di ETag e la verifica di `If-Match` per generare conflitti `HTTP 412` sono formalizzati nei TODO tecnici.
-4. **Negoziazione A2A M2M Semantica vs Envelope UCP `a2a.ucp.checkout`:**
-   - *Scelta (Demo 3):* Per evidenziare chiaramente il dialogo di reasoning tra i due LLM (Shopper vs Merchant) e lo streaming SSE didattico, la negoziazione M2M usa endpoint semantici dedicati (`/a2a/negotiate` e `/a2a/commit`).
-   - *Evoluzione (TODO-01):* Allineamento del trasporto al metodo formale JSON-RPC 2.0 `message/send` con DataPart UCP `a2a.ucp.checkout` (vedi [TODO.md](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/TODO.md) e [docs/demo-plan.md](file:///c:/Projects/AgenticCommerce/prjs/ucp-demo-mi-devfest2026/docs/demo-plan.md)).
+1. **Local HTTP vs HTTPS TLS 1.3:**
+   - *Rationale:* To allow the demo to run completely offline without X.509 certificate trust issues during live presentations, services bind to `http://localhost:...`.
+   - *Cryptographic Compensation:* Message security and payload integrity are cryptographically enforced at the application layer via **RFC 9421 HTTP Message Signatures (ECDSA-P256)** and RFC 9530 digest hashing.
+2. **Dual-Token Architecture vs UUIDv4:**
+   - *Rationale:* High-entropy UUIDv4 identifiers are used for carts and checkouts during the demo.
+   - *Evolution:* The formal Dual-Token pattern (with separate bearer mutation token) is documented in `TODO.md` as an enterprise hardening task.
+3. **Optimistic Locking in Memory vs ETag/If-Match:**
+   - *Rationale:* Active checkout sessions are managed in-memory with atomic state transitions.
+   - *Evolution:* Formal `ETag` generation and `If-Match` validation (`HTTP 412`) are outlined in the roadmap.
+4. **Semantic A2A Negotiation vs Strict `a2a.ucp.checkout` Envelope:**
+   - *Rationale (Demo 3):* To highlight multi-agent LLM reasoning and provide educational SSE streaming, Demo 3 uses dedicated semantic endpoints (`/a2a/negotiate` and `/a2a/commit`).
+   - *Evolution (TODO-01):* Alignment to standard JSON-RPC 2.0 `message/send` with formal UCP `a2a.ucp.checkout` DataPart envelope is prioritized in [`TODO.md`](../TODO.md).
