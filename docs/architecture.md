@@ -231,6 +231,21 @@ The AP2 integration follows the consortium specification for delegating purchasi
    - **Asynchronous Watcher:** A background monitor detects price drop triggers (e.g. promotional discounts on premium wine).
    - **Headless Signing:** The agent completes the purchase autonomously within cryptographic bounds.
 
+#### 5.1.1 Implementation Scope: Protocol Reality vs. Demo Simulation
+For conference transparency and engineering rigour, the demo suite explicitly delineates between what is fully implemented and what is emulated for offline autonomy:
+
+* **What is Formally Implemented (Active Protocol Logic):**
+  - **Full LCM UX Lifecycle:** The Angular modal presents the verified merchant domain, items breakdown, traveler transit binding (e.g. coach/seat), and authorized budget ceiling.
+  - **Normative SD-JWT Claims Structure:** Complete JSON Web Token payload schemas conforming to AP2 (`iss`, `sub`, `aud`, `order_id`, `mandate_type: "ap2_cart_mandate"`, `max_amount_cents`, `iat`, `exp`, `jti`).
+  - **Algorithmic Budget Enforcement:** Backend verification (`verify_ap2_mandate`) mathematically validates that the requested total does not exceed `max_amount_cents`, rejecting over-budget charges.
+  - **Inter-Agent Protocol Transport:** Mandates are injected into the Personal Shopper's A2A commit payload (`POST /a2a/commit`), validated by the merchant, and streamed in real time via SSE to the Protocol Inspector.
+  - **Order Persistence & Live Sync:** Mandate metadata (`mandate_id`, `max_amount_cents`, `signature_scheme`) is bound to the order record and synchronized live to Google Cloud Firestore (`bopis_orders`).
+
+* **What is Simulated / Emulated (Demo Scaffolding):**
+  - **Biometric Sensor Invocation:** The UI presents a timed 1.1s biometric animation rather than invoking the physical browser WebAuthn API (`navigator.credentials.get()`).
+  - **Hardware Key Cryptography:** Tokens are signed using symmetric HMAC-SHA256 (`HS256`) with a local shared secret rather than asymmetric ECDSA P-256 (`ES256`) inside an Android KeyMint or PC TPM chip.
+  - **Financial Settlement (MPP Gateway):** The Merchant Payment Processor settlement is simulated; transactions produce validated internal receipts without debiting real funds via live payment gateways (Stripe, Adyen, Google Pay).
+
 ### 5.2 RFC 9421 HTTP Message Signatures
 Ensures transactional HTTP exchanges between agents and UCP servers cannot be modified in transit or repudiated:
 - **Algorithm**: `ecdsa-p256-sha256`.
